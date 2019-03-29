@@ -145,8 +145,7 @@ export const handleUpdateDataEpic = (action$, store) =>
     const noop = { type: 'NOOP' }
     let itemProperties = _.cloneDeep(action.id._fields[0].properties)
     let deletedProps = store.getState().itemEditor.deletedProperties
-    let filteredProps = _.difference(_.keys(itemProperties), deletedProps)
-    itemProperties = _.pick(itemProperties, filteredProps)
+    itemProperties = _.omit(itemProperties, deletedProps)
     itemProperties = _.mapValues(itemProperties, function (
       props_ItemProperties
     ) {
@@ -167,7 +166,6 @@ export const handleUpdateDataEpic = (action$, store) =>
     let [id, request] = handleCypherCommand(newAction, store.dispatch)
     return request
       .then(res => {
-        console.log(res)
         if (res && res.records && res.records.length) {
           store.dispatch({ type: SET_NEO4J_ITEM, item: res.records[0] })
         }
