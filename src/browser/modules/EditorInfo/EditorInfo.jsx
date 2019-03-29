@@ -16,6 +16,7 @@ export class EditorInfo extends Component {
     this.state = {
       disabled: true,
       toggleAddProp: false,
+      toggleAddNode: false,
       item: props.itemEditor.neo4jItem
         ? _.cloneDeep(props.itemEditor.neo4jItem)
         : undefined
@@ -97,6 +98,16 @@ export class EditorInfo extends Component {
       toggleAddProp: false
     })
   }
+  showAddNode = () => {
+    this.setState({
+      toggleAddNode: true
+    })
+  }
+  closeAddNode = () => {
+    this.setState({
+      toggleAddNode: false
+    })
+  }
 
   render () {
     return (
@@ -113,6 +124,9 @@ export class EditorInfo extends Component {
             invertDelete={this.props.invertDelete}
             showAddProperty={this.showAddProperty}
             closeAddProperty={this.closeAddProperty}
+            showAddNode={this.showAddNode}
+            closeAddNode={this.closeAddNode}
+            createNewNode={this.props.createNewNode}
           />
         </div>
       </div>
@@ -138,6 +152,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     invertDelete: property => {
       dispatch(itemEditorActions.invertDelete(property))
+    },
+    createNewNode: newNode => {
+      dispatch(itemEditorActions.createNewNode(newNode))
     }
   }
 }

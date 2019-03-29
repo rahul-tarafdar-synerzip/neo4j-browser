@@ -17,6 +17,7 @@ export const UPDATE_DATA = `${NAME}/UPDATE_DATA`
 export const DELETE_PROPERTY = `${NAME}/DELETE_PROPERTY`
 export const INVERT_DELETE_PROPERTY = `${NAME}/INVERT_DELETE_PROPERTY`
 export const CLEAR_DELETE_PROPERTY = `${NAME}/CLEAR_DELETE_PROPERTY`
+export const CREATE_NEW_NODE = `${NAME}/CREATE_NEW_NODE`
 
 // Actions
 
@@ -37,6 +38,12 @@ export const invertDelete = property => {
   return {
     type: INVERT_DELETE_PROPERTY,
     property
+  }
+}
+export const createNewNode = newNode => {
+  return {
+    type: CREATE_NEW_NODE,
+    newNode
   }
 }
 
@@ -84,6 +91,9 @@ export default function reducer (state = initialState, action) {
       return { ...state, neo4jItem: action.item }
     case SET_NEO4J_ITEM:
       return { ...state, neo4jItem: action.item }
+    case CREATE_NEW_NODE:
+      console.log(action.newNode.name)
+      return state
     case DELETE_PROPERTY:
       newState = _.cloneDeep(state)
       newState.deletedProperties.push(action.property)
@@ -170,6 +180,26 @@ export const handleUpdateDataEpic = (action$, store) =>
           store.dispatch({ type: SET_NEO4J_ITEM, item: res.records[0] })
         }
         store.dispatch({ type: CLEAR_DELETE_PROPERTY })
+        return noop
+      })
+      .catch(function (e) {
+        throw e
+      })
+  })
+
+// Creating new node - EPIC
+export const createNewNodeEpic = (action$, store) =>
+  action$.ofType(CREATE_NEW_NODE).mergeMap(action => {
+    const noop = { type: 'NOOP' }
+    let cmd = `CREATE (a:Animals { title : ${JSON.stringify(
+      action.newNode.name
+    )}})`
+    let newAction = _.cloneDeep(action)
+    newAction.cmd = cmd
+    let [id, request] = handleCypherCommand(newAction, store.dispatch)
+    return request
+      .then(res => {
+        console.log(res)
         return noop
       })
       .catch(function (e) {

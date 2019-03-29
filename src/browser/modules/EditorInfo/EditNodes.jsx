@@ -5,6 +5,7 @@
  */
 
 import React, { Component } from 'react'
+import AddNode from './AddNode'
 import {
   Drawer,
   DrawerBody,
@@ -19,6 +20,10 @@ import AddProperty from './AddProperty'
 
 export class EditNodes extends Component {
   state = {
+    addNode: {
+      id: '',
+      name: ''
+    },
     addedProps: {
       key: '',
       value: ''
@@ -95,20 +100,30 @@ export class EditNodes extends Component {
     }
     this.setState(newstate)
   }
+  nodeAddHandleChange = e => {
+    let newstate = _.assign(this.state)
+    for (const i in newstate) {
+      if (i === 'addNode') {
+        newstate[i][e.target.id] = e.target.value
+      }
+    }
+    this.setState(newstate)
+  }
+  saveNewNode = () => {
+    this.props.createNewNode(this.state.addNode)
+  }
 
   render () {
     let content = null
-    if (
-      this.props.properties_state_data.neo4jItem &&
-      this.props.properties_state_data.selectedItem.type !== 'canvas'
-    ) {
-      content = (
+    this.props.properties_state_data.neo4jItem &&
+    this.props.properties_state_data.selectedItem.type !== 'canvas'
+      ? (content = (
         <div>
           {`${this.props.properties_state_data.selectedItem.type.toUpperCase()}`}
           <hr />
           <ul>
             <li>
-              Type : {`${this.props.properties_state_data.selectedItem.type}`}
+                Type : {`${this.props.properties_state_data.selectedItem.type}`}
             </li>
             <hr />
             <div>
@@ -117,7 +132,7 @@ export class EditNodes extends Component {
                   float: 'left'
                 }}
               >
-                Properties :
+                  Properties :
               </li>
               <div
                 data-testid='sidebarMetaItem'
@@ -137,7 +152,7 @@ export class EditNodes extends Component {
                     marginLeft: '5px'
                   }}
                 >
-                  Add Property
+                    Add Property
                 </p>
               </div>
             </div>
@@ -178,11 +193,35 @@ export class EditNodes extends Component {
             className='styled__chip-sc-1srdf8s-0 styled__StyledLabel-sc-1srdf8s-1 eGKpnH'
             onClick={this.setEditSelectedItem}
           >
-            update
+              update
           </div>
         </div>
-      )
-    }
+      ))
+      : (content = (
+        <div>
+          <div
+            data-testid='sidebarMetaItem'
+            className='styled__chip-sc-1srdf8s-0 styled__StyledLabel-sc-1srdf8s-1 eGKpnH'
+            onClick={this.props.showAddNode}
+          >
+            <p
+              style={{
+                marginTop: '-5px',
+                marginLeft: '5px'
+              }}
+            >
+                Add Node
+            </p>
+          </div>
+          {this.props.item.toggleAddNode ? (
+            <AddNode
+              closeNode={this.props.closeAddNode}
+              nodeAddHandleChange={this.nodeAddHandleChange}
+              saveNewNode={this.saveNewNode}
+            />
+          ) : null}
+        </div>
+      ))
 
     return (
       <Drawer id='db-drawer'>
