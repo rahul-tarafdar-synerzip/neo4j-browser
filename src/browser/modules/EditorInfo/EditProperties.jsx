@@ -9,7 +9,7 @@ import * as _ from 'lodash'
 
 function EditProperties (props) {
   const itemProperties = props.itemProperties
-
+  console.log(props.invalidProperty)
   return (
     <div>
       {itemProperties &&
@@ -27,10 +27,15 @@ function EditProperties (props) {
             props.deletedProperties,
             v => v === key
           )
-
+          const isValid = !!_.find(props.invalidProperty, v => v === key)
+          const invalidValue = !!isValid
+          console.log(isValid)
           const strikethroughValue = isPropertyDeleted ? 'line-through' : 'none'
           return (
-            <div style={{ textDecoration: strikethroughValue }} key={key}>
+            <div
+              style={{ textDecoration: strikethroughValue, invalidValue }}
+              key={key}
+            >
               <div
                 data-testid='sidebarMetaItem'
                 className='styled__chip-sc-1srdf8s-0 styled__StyledLabel-sc-1srdf8s-1 eGKpnH'
@@ -55,7 +60,7 @@ function EditProperties (props) {
                   {isPropertyDeleted ? 'Undo' : 'X'}
                 </p>
               </div>
-              {key} {isPropertyDeleted ? '-' : null}:
+              {key}:{isValid ? '******' : null}
               {props.disabled ? (
                 value
               ) : (
@@ -66,6 +71,7 @@ function EditProperties (props) {
                     type='text'
                     value={itemProperties[key]}
                     onChange={e => {
+                      isValid ? props.invalidProperty(key, e) : null,
                       props.handleChange(key, e, typeof itemProperties[key])
                     }}
                   />

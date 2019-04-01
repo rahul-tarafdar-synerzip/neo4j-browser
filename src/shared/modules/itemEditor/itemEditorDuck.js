@@ -1,4 +1,5 @@
 import { handleCypherCommand } from '../commands/helpers/cypher'
+import 'rxjs/add/operator/mapTo'
 import * as _ from 'lodash'
 
 const initialState = {
@@ -17,7 +18,7 @@ export const SET_NEO4J_ITEM = `${NAME}/SET_NEO4J_ITEM`
 export const UPDATE_DATA = `${NAME}/UPDATE_DATA`
 export const DELETE_PROPERTY = `${NAME}/DELETE_PROPERTY`
 export const INVERT_DELETE_PROPERTY = `${NAME}/INVERT_DELETE_PROPERTY`
-export const INVALID_PROPERTIES = `${NAME}/INVALID_PROPERTIES`
+export const SET_INVALID_PROPERTIES = `${NAME}/SET_INVALID_PROPERTIES`
 export const CHANGE_PROPERTY_VALUE = `${NAME}/CHANGE_PROPERTY_VALUE`
 export const CLEAR_DELETE_PROPERTY = `${NAME}/CLEAR_DELETE_PROPERTY`
 
@@ -44,15 +45,12 @@ export const invertDelete = property => {
 }
 export const setinvalidProperty = invalidproperty => {
   return {
-    type: INVALID_PROPERTIES,
+    type: SET_INVALID_PROPERTIES,
     invalidproperty
   }
 }
 
 export const changePropertyValue = (key, value, type) => {
-  // check properties changes
-  // if invalide then set it in invalidProperties
-
   return {
     type: CHANGE_PROPERTY_VALUE,
     key,
@@ -117,14 +115,12 @@ export default function reducer (state = initialState, action) {
       newState = _.cloneDeep(state)
       _.remove(newState.deletedProperties, v => v === action.property)
       return newState
-
-    case INVALID_PROPERTIES:
-      console.log(state.neo4jItem._fields[0].properties)
+    case SET_INVALID_PROPERTIES:
+      console.log('==>', state.neo4jItem._fields[0].properties)
       console.log(action.invalidproperty)
       newState = _.cloneDeep(state)
       newState.invalidProperties.push(action.invalidproperty)
       return newState
-
     case CHANGE_PROPERTY_VALUE:
       newState = _.cloneDeep(state)
       let { key, value, typeOfObject } = action
@@ -138,9 +134,6 @@ export default function reducer (state = initialState, action) {
         _.assign(newProperties, obj)
       }
       return newState
-
-      break
-
     default:
       return state
   }
@@ -220,3 +213,25 @@ export const handleUpdateDataEpic = (action$, store) =>
         throw e
       })
   })
+
+// Epic for validations
+export const invalidProperitesEpic = (action$, store) =>
+  action$
+    .ofType(CHANGE_PROPERTY_VALUE)
+    .do(action => {
+      let setinvalidProperties
+      if (action.value.match(/^-{0,1}\d+$/)) {
+        console.log('//valid integer (positive or negative)')
+      } else if (!action.value.match(/^([a-z0-9]{5,})$/)) {
+        console.log('It is a String')
+      } else {
+        // alert("please enter valid number");
+        setinvalidProperties = action.key
+      }
+      if (!setinvalidProperties) return
+      store.dispatch({
+        type: SET_INVALID_PROPERTIES,
+        invalidproperty: setinvalidProperties
+      })
+    })
+    .mapTo({ type: 'NOOP' })

@@ -152,6 +152,9 @@ export class EditNodes extends Component {
                 disabled={this.props.item.disabled}
                 deleteProperty={this.props.deleteProperty}
                 invertDelete={this.props.invertDelete}
+                invalidProperty={
+                  this.props.properties_state_data.invalidProperties
+                }
               />
             </div>
             <hr />
