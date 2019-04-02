@@ -159,21 +159,28 @@ export class EditNodes extends Component {
             </div>
             <hr />
           </ul>
-          <div
-            data-testid='sidebarMetaItem'
-            className='styled__chip-sc-1srdf8s-0 styled__StyledLabel-sc-1srdf8s-1 eGKpnH'
-            onClick={() => {
-              this.handleEdit()
-            }}
-          >
-            {this.props.item.disabled ? 'Edit' : 'Done'}
-          </div>
-          <div
-            data-testid='sidebarMetaItem'
-            className='styled__chip-sc-1srdf8s-0 styled__StyledLabel-sc-1srdf8s-1 eGKpnH'
-            onClick={this.setEditSelectedItem}
-          >
-            update
+          <div>
+            {this.props.properties_state_data.invalidProperties.length !=
+            0 ? null : (
+              <div>
+                  <div
+                  data-testid='sidebarMetaItem'
+                  className='styled__chip-sc-1srdf8s-0 styled__StyledLabel-sc-1srdf8s-1 eGKpnH'
+                  onClick={() => {
+                      this.handleEdit()
+                    }}
+                  >
+                  {this.props.item.disabled ? 'Edit' : 'Done'}
+                </div>
+                  <div
+                  data-testid='sidebarMetaItem'
+                  className='styled__chip-sc-1srdf8s-0 styled__StyledLabel-sc-1srdf8s-1 eGKpnH'
+                  onClick={this.setEditSelectedItem}
+                  >
+                  update
+                </div>
+                </div>
+              )}
           </div>
         </div>
       )

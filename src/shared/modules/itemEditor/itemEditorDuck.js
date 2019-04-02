@@ -21,6 +21,7 @@ export const INVERT_DELETE_PROPERTY = `${NAME}/INVERT_DELETE_PROPERTY`
 export const SET_INVALID_PROPERTIES = `${NAME}/SET_INVALID_PROPERTIES`
 export const CHANGE_PROPERTY_VALUE = `${NAME}/CHANGE_PROPERTY_VALUE`
 export const CLEAR_DELETE_PROPERTY = `${NAME}/CLEAR_DELETE_PROPERTY`
+export const CLEAR_INVALID_PROPERTY = `${NAME}/CLEAR_INVALID_PROPERTY`
 
 // Actions
 
@@ -47,6 +48,13 @@ export const setinvalidProperty = invalidproperty => {
   return {
     type: SET_INVALID_PROPERTIES,
     invalidproperty
+  }
+}
+
+export const clearinvalidProperty = invalidkey => {
+  return {
+    type: CLEAR_INVALID_PROPERTY,
+    invalidkey
   }
 }
 
@@ -116,10 +124,10 @@ export default function reducer (state = initialState, action) {
       _.remove(newState.deletedProperties, v => v === action.property)
       return newState
     case SET_INVALID_PROPERTIES:
-      console.log('==>', state.neo4jItem._fields[0].properties)
-      console.log(action.invalidproperty)
       newState = _.cloneDeep(state)
-      newState.invalidProperties.push(action.invalidproperty)
+      if (!_.includes(newState.invalidProperties, action.invalidproperty)) {
+        newState.invalidProperties.push(action.invalidproperty)
+      }
       return newState
     case CHANGE_PROPERTY_VALUE:
       newState = _.cloneDeep(state)
@@ -129,10 +137,14 @@ export default function reducer (state = initialState, action) {
       if (key in newProperties) {
         if (typeOfObject === 'string') obj = { [key]: value }
         else {
-          obj = { [key]: parseFloat(value) }
+          obj = { [key]: value }
         }
         _.assign(newProperties, obj)
       }
+      return newState
+    case CLEAR_INVALID_PROPERTY:
+      newState = _.cloneDeep(state)
+      _.pull(newState.invalidProperties, action.invalidkey)
       return newState
     default:
       return state
@@ -220,18 +232,20 @@ export const invalidProperitesEpic = (action$, store) =>
     .ofType(CHANGE_PROPERTY_VALUE)
     .do(action => {
       let setinvalidProperties
+      // checks if the value entered is a number or not
       if (action.value.match(/^-{0,1}\d+$/)) {
-        console.log('//valid integer (positive or negative)')
+        store.dispatch({
+          type: CLEAR_INVALID_PROPERTY,
+          invalidkey: action.key
+        })
       } else if (!action.value.match(/^([a-z0-9]{5,})$/)) {
-        console.log('It is a String')
+        store.dispatch({ type: 'NOOP' })
       } else {
-        // alert("please enter valid number");
         setinvalidProperties = action.key
+        store.dispatch({
+          type: SET_INVALID_PROPERTIES,
+          invalidproperty: setinvalidProperties
+        })
       }
-      if (!setinvalidProperties) return
-      store.dispatch({
-        type: SET_INVALID_PROPERTIES,
-        invalidproperty: setinvalidProperties
-      })
     })
     .mapTo({ type: 'NOOP' })
