@@ -13,6 +13,7 @@ export class EditorInfo extends Component {
       <div>
         <EditNodes
           nodeProperties={this.props.selectedItem._fields[0].properties}
+          entityType={this.props.entityType}
         />
       </div>
     )
@@ -20,7 +21,8 @@ export class EditorInfo extends Component {
 }
 const mapStateToProps = state => {
   return {
-    selectedItem: state.itemEditor.selectedItem
+    selectedItem: state.itemEditor.selectedItem,
+    entityType: state.itemEditor.entityType
   }
 }
 
