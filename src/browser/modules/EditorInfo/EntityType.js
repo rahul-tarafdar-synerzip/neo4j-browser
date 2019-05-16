@@ -8,6 +8,7 @@ import {
 /**
  * This functional component is used to display the type of entity on selection.
  */
+
 export const EntityType = ({ itemType = '' }) => {
   return (
     <DrawerSection>
