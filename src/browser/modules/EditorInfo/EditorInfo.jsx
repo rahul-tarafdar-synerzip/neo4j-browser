@@ -5,11 +5,24 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withBus } from 'react-suber'
+import DisplayNodeDetails from './DisplayNodeDetails'
 
 export class EditorInfo extends Component {
   render () {
-    return <div>Editor</div>
+    return (
+      <div>
+        <DisplayNodeDetails
+          selectedItem={this.props.selectedItem._fields[0].properties}
+        />
+      </div>
+    )
   }
 }
 
-export default withBus(connect()(EditorInfo))
+const mapStateToProps = state => {
+  return {
+    selectedItem: state.itemEditor.selectedItem
+  }
+}
+
+export default withBus(connect(mapStateToProps)(EditorInfo))
