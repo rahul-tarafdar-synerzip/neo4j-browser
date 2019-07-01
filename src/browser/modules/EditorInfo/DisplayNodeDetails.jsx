@@ -30,6 +30,10 @@ function DisplayNodeDetails (props) {
         <DrawerHeader>Editor</DrawerHeader>
         <DrawerBody>
           <DrawerSection>
+            <DrawerSubHeader>Label</DrawerSubHeader>
+            {props.label}
+          </DrawerSection>
+          <DrawerSection>
             <DrawerSubHeader>Properties</DrawerSubHeader>
             {content}
           </DrawerSection>
