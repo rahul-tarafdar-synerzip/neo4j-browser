@@ -1,3 +1,8 @@
+/*
+ * This module maps the props received from EditorInfo and
+ * displays the properties of the selected node.
+ */
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import {

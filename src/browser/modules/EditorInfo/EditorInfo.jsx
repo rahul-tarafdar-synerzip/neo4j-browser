@@ -1,5 +1,7 @@
 /*
- * This program depicts the behaviour of the edit drawer.
+ * This module depicts the behaviour of the edit drawer and
+ * it imports DisplayNodeDetails which is used for rendering
+ * selected node's properties.
  */
 
 import React, { Component } from 'react'
