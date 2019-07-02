@@ -40,14 +40,12 @@ function DisplayRelationshipDetails (props) {
   return (
     <div>
       <DrawerSection>
-        <DrawerSubHeader>Entity Type</DrawerSubHeader>
+        <DrawerSubHeader>Entity</DrawerSubHeader>
         <DrawerSectionBody>{props.entityType}</DrawerSectionBody>
       </DrawerSection>
-      <DrawerSubHeader>Relationship Types</DrawerSubHeader>
-      <DrawerSectionBody>{props.relationshipType}</DrawerSectionBody>
       <DrawerSection>
-        <DrawerSubHeader>Relationship Properties</DrawerSubHeader>
-        {content}
+        <DrawerSubHeader>Relationship Types</DrawerSubHeader>
+        <DrawerSectionBody>{props.relationshipType}</DrawerSectionBody>
       </DrawerSection>
     </div>
   )

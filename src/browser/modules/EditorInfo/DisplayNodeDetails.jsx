@@ -60,29 +60,24 @@ function DisplayNodeDetails (props) {
 
   return (
     <div>
-      <Drawer>
-        <DrawerHeader>Editor</DrawerHeader>
-        <DrawerBody>
-          <DrawerSection>
-            <DrawerSubHeader>Entity Type</DrawerSubHeader>
-            {props.entityType}
-          </DrawerSection>
-          <DrawerSection>
-            <DrawerSubHeader>Labels</DrawerSubHeader>
-            <DrawerSectionBody
-              className={classNames({
-                [styles['wrapper']]: true
-              })}
-            >
-              {labelItems}
-            </DrawerSectionBody>
-          </DrawerSection>
-          <DrawerSection>
-            <DrawerSubHeader>Properties</DrawerSubHeader>
-            {content}
-          </DrawerSection>
-        </DrawerBody>
-      </Drawer>
+      <DrawerSection>
+        <DrawerSubHeader>Entity</DrawerSubHeader>
+        {props.entityType}
+      </DrawerSection>
+      <DrawerSection>
+        <DrawerSubHeader>Labels</DrawerSubHeader>
+        <DrawerSectionBody
+          className={classNames({
+            [styles['wrapper']]: true
+          })}
+        >
+          {labelItems}
+        </DrawerSectionBody>
+      </DrawerSection>
+      <DrawerSection>
+        <DrawerSubHeader>Properties</DrawerSubHeader>
+        {content}
+      </DrawerSection>
     </div>
   )
 }
