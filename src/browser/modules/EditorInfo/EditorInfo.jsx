@@ -14,9 +14,7 @@ import DisplayRelationshipDetails from './DisplayRelationshipDetails'
 import {
   Drawer,
   DrawerHeader,
-  DrawerBody,
-  DrawerSection,
-  DrawerSectionBody
+  DrawerBody
 } from 'browser-components/drawer/index'
 
 export class EditorInfo extends Component {

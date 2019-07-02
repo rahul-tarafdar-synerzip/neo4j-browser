@@ -6,11 +6,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {
-  Drawer,
-  DrawerHeader,
   DrawerSection,
   DrawerSubHeader,
-  DrawerBody,
   DrawerSectionBody
 } from 'browser-components/drawer/index'
 import { getStringValue } from './utils'
