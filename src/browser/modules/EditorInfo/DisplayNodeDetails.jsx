@@ -1,6 +1,6 @@
 /*
  * This module maps the props received from EditorInfo and
- * displays the properties and entity type of the selected node.
+ * displays the labels, properties and entity type of the selected node.
  */
 
 import React from 'react'
@@ -10,20 +10,54 @@ import {
   DrawerHeader,
   DrawerSection,
   DrawerSubHeader,
-  DrawerBody
+  DrawerBody,
+  DrawerSectionBody
 } from 'browser-components/drawer/index'
 import { getStringValue } from './utils'
 import * as _ from 'lodash'
+import classNames from 'classnames'
+import styles from '../DatabaseInfo/style_meta.css'
+import { chip, StyledKeyEditor } from './styled'
+import { StyledTable, StyledValue } from '../DatabaseInfo/styled'
 
-function DisplayNodeDetails (props) {
-  let content = null
-  content = _.map(props.selectedItem, (value, key) => {
+const createItems = (originalList, RenderType) => {
+  let items = [...originalList]
+
+  return items.map((text, index) => {
     return (
-      <div key={key}>
-        {key}: {getStringValue(value)}
-      </div>
+      <RenderType.component data-testid='sidebarMetaItem' key={index}>
+        {text}
+      </RenderType.component>
     )
   })
+}
+function DisplayNodeDetails (props) {
+  let { labels } = props
+  let labelItems = <p>There are no labels in database</p>
+  if (labels.length) {
+    labelItems = createItems(labels, { component: chip })
+  }
+
+  let content = <p>There are no properties in database</p>
+  if (content) {
+    content = _.map(props.selectedItem, (value, key) => {
+      return (
+        <div key={key}>
+          <StyledTable>
+            <tbody>
+              <tr>
+                <StyledKeyEditor>{key}:</StyledKeyEditor>
+                <StyledValue data-testid='user-details-username'>
+                  {getStringValue(value)}
+                </StyledValue>
+              </tr>
+            </tbody>
+          </StyledTable>
+        </div>
+      )
+    })
+  }
+
   return (
     <div>
       <Drawer>
@@ -32,6 +66,16 @@ function DisplayNodeDetails (props) {
           <DrawerSection>
             <DrawerSubHeader>Entity Type</DrawerSubHeader>
             {props.entityType}
+          </DrawerSection>
+          <DrawerSection>
+            <DrawerSubHeader>Labels</DrawerSubHeader>
+            <DrawerSectionBody
+              className={classNames({
+                [styles['wrapper']]: true
+              })}
+            >
+              {labelItems}
+            </DrawerSectionBody>
           </DrawerSection>
           <DrawerSection>
             <DrawerSubHeader>Properties</DrawerSubHeader>

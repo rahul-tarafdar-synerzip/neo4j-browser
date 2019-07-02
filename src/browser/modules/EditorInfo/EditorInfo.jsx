@@ -27,6 +27,7 @@ export class EditorInfo extends Component {
           <DisplayNodeDetails
             selectedItem={this.props.selectedItem._fields[0].properties}
             entityType={this.props.entityType}
+            labels={this.props.selectedItem._fields[0].labels}
           />
         </div>
       ) : (
