@@ -39,21 +39,16 @@ function DisplayRelationshipDetails (props) {
   }
   return (
     <div>
-      <Drawer>
-        <DrawerHeader>Editor</DrawerHeader>
-        <DrawerBody>
-          <DrawerSection>
-            <DrawerSubHeader>Entity Type</DrawerSubHeader>
-            {props.entityType}
-          </DrawerSection>
-          <DrawerSubHeader>Relationship Types</DrawerSubHeader>
-          <DrawerSectionBody>{props.relationshipType}</DrawerSectionBody>
-          <DrawerSection>
-            <DrawerSubHeader>Relationship Properties</DrawerSubHeader>
-            {content}
-          </DrawerSection>
-        </DrawerBody>
-      </Drawer>
+      <DrawerSection>
+        <DrawerSubHeader>Entity Type</DrawerSubHeader>
+        <DrawerSectionBody>{props.entityType}</DrawerSectionBody>
+      </DrawerSection>
+      <DrawerSubHeader>Relationship Types</DrawerSubHeader>
+      <DrawerSectionBody>{props.relationshipType}</DrawerSectionBody>
+      <DrawerSection>
+        <DrawerSubHeader>Relationship Properties</DrawerSubHeader>
+        {content}
+      </DrawerSection>
     </div>
   )
 }

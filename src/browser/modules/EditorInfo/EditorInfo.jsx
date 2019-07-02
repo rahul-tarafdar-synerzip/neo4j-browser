@@ -21,37 +21,33 @@ import {
 
 export class EditorInfo extends Component {
   render () {
-    return this.props.selectedItem ? (
-      this.props.entityType == 'node' ? (
-        <div>
-          <DisplayNodeDetails
-            selectedItem={this.props.selectedItem._fields[0].properties}
-            entityType={this.props.entityType}
-            labels={this.props.selectedItem._fields[0].labels}
-          />
-        </div>
-      ) : (
-        <div>
-          <DisplayRelationshipDetails
-            relationshipType={this.props.selectedItem._fields[0].type}
-            relationshipProperties={
-              this.props.selectedItem._fields[0].properties
-            }
-            entityType={this.props.entityType}
-          />
-        </div>
-      )
-    ) : (
-      <Drawer id='db-drawer'>
-        <DrawerHeader>Editor</DrawerHeader>
-        <DrawerBody>
-          <DrawerSection>
-            <DrawerSectionBody>
-              Please select a node or relationship
-            </DrawerSectionBody>
-          </DrawerSection>
-        </DrawerBody>
-      </Drawer>
+    return (
+      <div>
+        <Drawer>
+          <DrawerHeader>Editor</DrawerHeader>
+          <DrawerBody>
+            {this.props.selectedItem !== undefined ? (
+              this.props.entityType == 'node' ? (
+                <DisplayNodeDetails
+                  selectedItem={this.props.selectedItem._fields[0].properties}
+                  entityType={this.props.entityType}
+                  labels={this.props.selectedItem._fields[0].labels}
+                />
+              ) : (
+                <div>
+                  <DisplayRelationshipDetails
+                    relationshipType={this.props.selectedItem._fields[0].type}
+                    relationshipProperties={
+                      this.props.selectedItem._fields[0].properties
+                    }
+                    entityType={this.props.entityType}
+                  />
+                </div>
+              )
+            ) : null}
+          </DrawerBody>
+        </Drawer>
+      </div>
     )
   }
 }
