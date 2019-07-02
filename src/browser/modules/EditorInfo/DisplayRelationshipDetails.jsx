@@ -1,10 +1,9 @@
 /*
  * This module maps the props received from EditorInfo and
- * displays the properties and entity type of the selected node.
+ * displays the properties,type and entity type of the selected relationship.
  */
 
 import React from 'react'
-import PropTypes from 'prop-types'
 import {
   Drawer,
   DrawerHeader,
@@ -15,9 +14,9 @@ import {
 import { getStringValue } from './utils'
 import * as _ from 'lodash'
 
-function DisplayNodeDetails (props) {
+function DisplayRelationshipDetails (props) {
   let content = null
-  content = _.map(props.selectedItem, (value, key) => {
+  content = _.map(props.relationshipProperties, (value, key) => {
     return (
       <div key={key}>
         {key}: {getStringValue(value)}
@@ -34,7 +33,11 @@ function DisplayNodeDetails (props) {
             {props.entityType}
           </DrawerSection>
           <DrawerSection>
-            <DrawerSubHeader>Properties</DrawerSubHeader>
+            <DrawerSubHeader>Relationship Type</DrawerSubHeader>
+            {props.relationshipType}
+          </DrawerSection>
+          <DrawerSection>
+            <DrawerSubHeader>Relationship Properties</DrawerSubHeader>
             {content}
           </DrawerSection>
         </DrawerBody>
@@ -43,8 +46,4 @@ function DisplayNodeDetails (props) {
   )
 }
 
-DisplayNodeDetails.propTypes = {
-  selectedItem: PropTypes.object
-}
-
-export default DisplayNodeDetails
+export default DisplayRelationshipDetails
