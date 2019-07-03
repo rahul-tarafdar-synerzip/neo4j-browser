@@ -75,22 +75,26 @@ export const EntitySection = props => {
 export const PropertiesSection = props => {
   let content = []
   if (props.properties) {
-    content = _.map(props.properties, (value, key) => {
-      return (
-        <div key={key}>
-          <StyledTable>
-            <tbody>
-              <tr>
-                <StyledKeyEditor>{key}:</StyledKeyEditor>
-                <StyledValue data-testid='user-details-username'>
-                  {getStringValue(value)}
-                </StyledValue>
-              </tr>
-            </tbody>
-          </StyledTable>
-        </div>
-      )
-    })
+    typeof props.properties !== 'object'
+      ? (content = _.map(props.properties, (value, key) => {
+        return (
+          <div key={key}>
+            <StyledTable>
+              <tbody>
+                <tr>
+                  <StyledKeyEditor>{key}:</StyledKeyEditor>
+                  <StyledValue data-testid='user-details-username'>
+                    {getStringValue(value)}
+                  </StyledValue>
+                </tr>
+              </tbody>
+            </StyledTable>
+          </div>
+        )
+      }))
+      : (content = _.map(props.properties, (value, key) => {
+        return key + ': ' + props.properties[key]
+      }))
   }
   if (!content.length) {
     content.push(
