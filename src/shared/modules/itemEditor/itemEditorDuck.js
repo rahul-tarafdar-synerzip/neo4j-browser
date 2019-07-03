@@ -1,4 +1,5 @@
 import { handleCypherCommand } from '../commands/helpers/cypher'
+
 const initialState = {
   record: undefined,
   entityType: undefined
@@ -48,9 +49,7 @@ export const handleFetchDataEpic = (action$, store) =>
         return noop
       })
     }
-    let cmd = `MATCH (a) where id(a)=${
-      action.id
-    } RETURN a, ((a)-->()) , ((a)<--())`
+    let cmd = `MATCH (a) where id(a)=${action.id} RETURN a, ((a)-->()) , ((a)<--())`
     if (action.entityType === 'relationship') {
       cmd = `MATCH ()-[r]->() where id(r)=${action.id} RETURN r`
     }

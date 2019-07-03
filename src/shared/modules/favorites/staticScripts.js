@@ -129,3 +129,5 @@ export const folders = [
     isStatic: true
   }
 ]
+
+export const nodes = []
