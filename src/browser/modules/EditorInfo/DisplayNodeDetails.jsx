@@ -92,6 +92,10 @@ export const EntitySection = props => {
     </DrawerSection>
   )
 }
+EntitySection.propTypes = {
+  node: PropTypes.object,
+  editEntityAction: PropTypes.func
+}
 
 /**
  * Properties section

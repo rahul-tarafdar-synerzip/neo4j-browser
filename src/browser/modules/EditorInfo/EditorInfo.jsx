@@ -29,7 +29,6 @@ export class EditorInfo extends Component {
                 <DisplayNodeDetails
                   editEntityAction={this.props.editEntityAction}
                   node={this.props.selectedItem}
-                  node={this.props.selectedItem}
                   removeClick={this.props.removeClick}
                 />
               ) : (
