@@ -44,8 +44,8 @@ export class EditorInfo extends Component {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    deleteSelectedNode: nodeId => {
-      const action = itemEditorActions.deleteSelectedNode(nodeId)
+    deleteSelectedNode: (nodeId, firstLabel) => {
+      const action = itemEditorActions.deleteSelectedNode(nodeId, firstLabel)
       ownProps.bus.send(action.type, action)
     }
   }

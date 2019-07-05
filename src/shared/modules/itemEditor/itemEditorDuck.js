@@ -29,10 +29,11 @@ export const fetchData = (id, entityType) => {
  * Delete Node action creator
  * @param {int} entityType the selected node id
  */
-export const deleteSelectedNode = nodeId => {
+export const deleteSelectedNode = (nodeId, firstLabel) => {
   return {
     type: DELETE_NODE,
-    nodeId
+    nodeId,
+    firstLabel
   }
 }
 
@@ -44,7 +45,6 @@ export default function reducer (state = initialState, action) {
     case FETCH_DATA_ON_SELECT:
       return { ...state, entityType: action.entityType }
     case DELETE_NODE:
-      console.log(action.nodeId)
       return state
     default:
       return state
@@ -76,6 +76,24 @@ export const handleFetchDataEpic = (action$, store) =>
           store.dispatch({ type: SET_RECORD, item: res.records[0] })
         }
         return noop
+      })
+      .catch(function (e) {
+        throw e
+      })
+  })
+
+/**
+ * Epic to delete node
+ */
+export const handleDeleteNodeEpic = (action$, store) =>
+  action$.ofType(DELETE_NODE).mergeMap(action => {
+    let cmd = `MATCH (p:${action.firstLabel}) where ID(p)=${action.nodeId} OPTIONAL MATCH (p)-[r]-() DELETE r,p`
+    let newAction = _.cloneDeep(action)
+    newAction.cmd = cmd
+    let [id, request] = handleCypherCommand(newAction, store.dispatch)
+    return request
+      .then(res => {
+        console.log(res)
       })
       .catch(function (e) {
         throw e
