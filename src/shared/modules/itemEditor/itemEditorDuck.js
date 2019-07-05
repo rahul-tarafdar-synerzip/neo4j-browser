@@ -87,6 +87,7 @@ export const handleFetchDataEpic = (action$, store) =>
  */
 export const handleDeleteNodeEpic = (action$, store) =>
   action$.ofType(DELETE_NODE).mergeMap(action => {
+    const noop = { type: 'NOOP' }
     let cmd = `MATCH (p:${action.firstLabel}) where ID(p)=${action.nodeId} OPTIONAL MATCH (p)-[r]-() DELETE r,p`
     let newAction = _.cloneDeep(action)
     newAction.cmd = cmd
@@ -94,6 +95,8 @@ export const handleDeleteNodeEpic = (action$, store) =>
     return request
       .then(res => {
         console.log(res)
+        store.dispatch({ type: SET_RECORD, item: res.records[0] })
+        return noop
       })
       .catch(function (e) {
         throw e
