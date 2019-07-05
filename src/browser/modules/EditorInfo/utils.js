@@ -34,7 +34,14 @@ export const getStringValue = value => {
     return value ? 'true' : 'false'
   }
 
-  // FIXME handle if value is an array
+  if (typeof value === 'object') {
+    let propertyArray = []
+    for (let i in value) {
+      propertyArray.push(value[i], ', ')
+    }
+    propertyArray.pop()
+    return propertyArray
+  }
 
   return ''
 }
