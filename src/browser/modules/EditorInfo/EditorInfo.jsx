@@ -8,6 +8,7 @@ import {
   DrawerHeader,
   DrawerBody
 } from 'browser-components/drawer/index'
+import * as itemEditor from 'shared/modules/itemEditor/itemEditorDuck'
 import { getSelectedItem } from 'shared/modules/selectors/itemEditor'
 import * as itemEditorActions from 'shared/modules/itemEditor/itemEditorDuck'
 
@@ -28,6 +29,8 @@ export class EditorInfo extends Component {
                 <DisplayNodeDetails
                   editEntityAction={this.props.editEntityAction}
                   node={this.props.selectedItem}
+                  node={this.props.selectedItem}
+                  removeClick={this.props.removeClick}
                 />
               ) : (
                 <DisplayRelationshipDetails
@@ -42,8 +45,18 @@ export class EditorInfo extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    selectedItem: getSelectedItem(state),
+    entityType: state.itemEditor.entityType
+  }
+}
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+    removeClick: (propertykey, propertyvalue) => {
+      const action = itemEditor.removeClick(propertykey, propertyvalue)
+      dispatch(action)
+    },
     editEntityAction: (nodeId, firstLabel, editType, entityType) => {
       const action = itemEditorActions.editEntityAction(
         nodeId,
@@ -53,13 +66,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       )
       ownProps.bus.send(action.type, action)
     }
-  }
-}
-
-const mapStateToProps = state => {
-  return {
-    selectedItem: getSelectedItem(state),
-    entityType: state.itemEditor.entityType
   }
 }
 

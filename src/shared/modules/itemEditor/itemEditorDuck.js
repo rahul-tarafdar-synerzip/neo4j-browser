@@ -9,9 +9,9 @@ export const NAME = 'itemEditor'
 export const SET_RECORD = `${NAME}/SET_RECORD`
 export const FETCH_DATA_ON_SELECT = `${NAME}/FETCH_DATA_ON_SELECT`
 export const EDIT_ENTITY_ACTION_CONSTANT = `${NAME}/EDIT_ENTITY_ACTION_CONSTANT`
+export const REMOVE_PROPERTY = `${NAME}/REMOVE_PROPERTY`
 
 // Actions
-
 /**
  * Fetch data action creator
  * @param {number} id The id of selected entity for which we will fetch data
@@ -42,6 +42,19 @@ export const editEntityAction = (nodeId, firstLabel, editType, entityType) => {
   }
 }
 
+/**
+ * Remove data action creator
+ * @param {string/object} propertyKey The propertyKey of selected properties to be removed
+ * @param {string} propertyValue The propertyValue of the selected properties to be removed
+ */
+
+export const removeClick = (propertyKey, propertyValue) => {
+  return {
+    type: REMOVE_PROPERTY,
+    propertyKey,
+    propertyValue
+  }
+}
 // Reducer
 export default function reducer (state = initialState, action) {
   switch (action.type) {
@@ -51,6 +64,10 @@ export default function reducer (state = initialState, action) {
       return { ...state, entityType: action.entityType }
     case EDIT_ENTITY_ACTION_CONSTANT:
       return state
+    case REMOVE_PROPERTY:
+      console.log(action.propertyKey, action.propertyValue)
+      return state
+
     default:
       return state
   }
