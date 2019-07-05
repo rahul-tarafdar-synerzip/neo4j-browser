@@ -11,6 +11,17 @@ import classNames from 'classnames'
 import styles from '../DatabaseInfo/style_meta.css'
 import { chip, StyledKeyEditor } from './styled'
 import { StyledTable, StyledValue } from '../DatabaseInfo/styled'
+import styled from 'styled-components'
+
+const IconButton = styled.button`
+  margin-left: 4px;
+  border: 0;
+  background: white;
+  color: black;
+  &:focus {
+    outline: solid;
+  }
+`
 
 /**
  * Creates items to display in chip format
@@ -62,6 +73,13 @@ LabelSection.propTypes = {
 export const EntitySection = props => {
   return (
     <DrawerSection>
+      <IconButton
+        onClick={() => {
+          console.log('Hi')
+        }}
+      >
+        Delete Node
+      </IconButton>
       <DrawerSubHeader>Entity</DrawerSubHeader>
       {props.type}
     </DrawerSection>
