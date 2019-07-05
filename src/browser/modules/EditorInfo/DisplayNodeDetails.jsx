@@ -75,9 +75,11 @@ export const EntitySection = props => {
     <DrawerSection>
       <IconButton
         onClick={() => {
-          props.deleteSelectedNode(
+          props.editEntityAction(
             props.node.identity.toInt(),
-            props.node.labels[0]
+            props.node.labels[0],
+            'delete',
+            'node'
           )
         }}
       >

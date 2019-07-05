@@ -26,7 +26,7 @@ export class EditorInfo extends Component {
             {this.props.selectedItem ? (
               this.props.entityType === 'node' ? (
                 <DisplayNodeDetails
-                  deleteSelectedNode={this.props.deleteSelectedNode}
+                  editEntityAction={this.props.editEntityAction}
                   node={this.props.selectedItem}
                 />
               ) : (
@@ -44,8 +44,13 @@ export class EditorInfo extends Component {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    deleteSelectedNode: (nodeId, firstLabel) => {
-      const action = itemEditorActions.deleteSelectedNode(nodeId, firstLabel)
+    editEntityAction: (nodeId, firstLabel, editType, entityType) => {
+      const action = itemEditorActions.editEntityAction(
+        nodeId,
+        firstLabel,
+        editType,
+        entityType
+      )
       ownProps.bus.send(action.type, action)
     }
   }

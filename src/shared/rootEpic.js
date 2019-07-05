@@ -86,11 +86,11 @@ import {
 } from './modules/currentUser/currentUserDuck'
 import {
   handleFetchDataEpic,
-  handleDeleteNodeEpic
+  handleEditEntityEpic
 } from './modules/itemEditor/itemEditorDuck'
 
 export default combineEpics(
-  handleDeleteNodeEpic,
+  handleEditEntityEpic,
   handleFetchDataEpic,
   handleCommandEpic,
   handleSingleCommandEpic,
