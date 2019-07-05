@@ -75,7 +75,7 @@ export const EntitySection = props => {
     <DrawerSection>
       <IconButton
         onClick={() => {
-          console.log('Hi')
+          props.deleteSelectedNode(props.node.identity.toInt())
         }}
       >
         Delete Node
@@ -134,7 +134,7 @@ PropertiesSection.propTypes = {
 function DisplayNodeDetails (props) {
   return (
     <React.Fragment>
-      <EntitySection type='Node' />
+      <EntitySection {...props} type='Node' />
       <LabelSection {...props} />
       <PropertiesSection
         properties={props.node ? props.node.properties : null}

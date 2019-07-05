@@ -8,6 +8,7 @@ const initialState = {
 export const NAME = 'itemEditor'
 export const SET_RECORD = `${NAME}/SET_RECORD`
 export const FETCH_DATA_ON_SELECT = `${NAME}/FETCH_DATA_ON_SELECT`
+export const DELETE_NODE = `${NAME}/DELETE_NODE`
 
 // Actions
 
@@ -24,6 +25,17 @@ export const fetchData = (id, entityType) => {
   }
 }
 
+/**
+ * Delete Node action creator
+ * @param {int} entityType the selected node id
+ */
+export const deleteSelectedNode = nodeId => {
+  return {
+    type: DELETE_NODE,
+    nodeId
+  }
+}
+
 // Reducer
 export default function reducer (state = initialState, action) {
   switch (action.type) {
@@ -31,6 +43,9 @@ export default function reducer (state = initialState, action) {
       return { ...state, record: action.item }
     case FETCH_DATA_ON_SELECT:
       return { ...state, entityType: action.entityType }
+    case DELETE_NODE:
+      console.log(action.nodeId)
+      return state
     default:
       return state
   }
@@ -48,9 +63,7 @@ export const handleFetchDataEpic = (action$, store) =>
         return noop
       })
     }
-    let cmd = `MATCH (a) where id(a)=${
-      action.id
-    } RETURN a, ((a)-->()) , ((a)<--())`
+    let cmd = `MATCH (a) where id(a)=${action.id} RETURN a, ((a)-->()) , ((a)<--())`
     if (action.entityType === 'relationship') {
       cmd = `MATCH ()-[r]->() where id(r)=${action.id} RETURN r`
     }
