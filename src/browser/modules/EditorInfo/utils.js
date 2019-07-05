@@ -34,13 +34,8 @@ export const getStringValue = value => {
     return value ? 'true' : 'false'
   }
 
-  if (typeof value === 'object') {
-    let propertyArray = []
-    for (let i in value) {
-      propertyArray.push(value[i], ', ')
-    }
-    propertyArray.pop()
-    return propertyArray
+  if (Array.isArray(value)) {
+    return value.join(' , ')
   }
 
   return ''
