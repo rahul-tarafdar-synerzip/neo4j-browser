@@ -32,18 +32,10 @@ export const fetchData = (id, entityType) => {
  * @param {string} editType edit type (create, update, delete)
  * @param {string} entityType entity type (node, relationship)
  */
-export const editEntityAction = (
-  nodeId,
-  firstLabel,
-  propertyKey,
-  editType,
-  entityType
-) => {
+export const editEntityAction = (editPayload, editType, entityType) => {
   return {
     type: EDIT_ENTITY_ACTION_CONSTANT,
-    nodeId,
-    firstLabel,
-    propertyKey,
+    editPayload,
     editType,
     entityType
   }
@@ -112,8 +104,8 @@ export const handleEditEntityEpic = (action$, store) =>
         break
       case 'delete':
         if (action.entityType === 'node') {
-          cmd = `MATCH (p:${action.firstLabel}) where ID(p)=${
-            action.nodeId
+          cmd = `MATCH (p:${action.editPayload.firstLabel}) where ID(p)=${
+            action.editPayload.nodeId
           } OPTIONAL MATCH (p)-[r]-() DELETE r,p`
         } else if (action.entityType === 'relationship') {
           // FIXME find out the command for relationship deletion
