@@ -11,7 +11,6 @@ import classNames from 'classnames'
 import styles from '../DatabaseInfo/style_meta.css'
 import { chip, StyledKeyEditor } from './styled'
 import { StyledTable, StyledValue } from '../DatabaseInfo/styled'
-import { NewNodeButton } from '../Sidebar/styled'
 
 /**
  * Creates items to display in chip format
@@ -61,12 +60,10 @@ LabelSection.propTypes = {
  * Entity Section
  */
 export const EntitySection = props => {
+  console.log('in entity section', props.textField)
   return (
     <DrawerSection>
-      <DrawerSubHeader>
-        Entity
-        <NewNodeButton onClick={() => props.addNodeClick()} />
-      </DrawerSubHeader>
+      <DrawerSubHeader>Entity</DrawerSubHeader>
       {props.type}
     </DrawerSection>
   )
@@ -123,7 +120,7 @@ PropertiesSection.propTypes = {
 function DisplayNodeDetails (props) {
   return (
     <React.Fragment>
-      <EntitySection type='Node' addNodeClick={props.addNodeClick} />
+      <EntitySection type='Node' />
       <LabelSection {...props} />
       <PropertiesSection
         properties={props.node ? props.node.properties : null}

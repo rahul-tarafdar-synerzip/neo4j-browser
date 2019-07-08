@@ -9,8 +9,12 @@ import {
   DrawerBody
 } from 'browser-components/drawer/index'
 import { getSelectedItem } from 'shared/modules/selectors/itemEditor'
-import * as node from '../../../shared/modules/itemEditor/nodesDuck'
-
+import {
+  addNode,
+  handleToggleNodeTextBox
+} from '../../../shared/modules/itemEditor/nodesDuck'
+import { NewNodeButton } from '../Sidebar/styled'
+import Node from './Node'
 /**
  * The Editor drawer.
  * Based on selection, either provides node editor or relationship editor.
@@ -21,13 +25,22 @@ export class EditorInfo extends Component {
     return (
       <div>
         <Drawer>
-          <DrawerHeader>Editor</DrawerHeader>
+          <DrawerHeader>
+            Editor
+            <NewNodeButton onClick={this.props.handleToggleNodeTextBox} />
+            <Node
+              addNode={this.props.addNode}
+              textField={this.props.textField}
+            />
+          </DrawerHeader>
+
           <DrawerBody>
             {this.props.selectedItem ? (
               this.props.entityType === 'node' ? (
                 <DisplayNodeDetails
                   node={this.props.selectedItem}
-                  addNodeClick={this.props.addNodeClick}
+                  addNode={this.props.addNode}
+                  textField={this.props.textField}
                 />
               ) : (
                 <DisplayRelationshipDetails
@@ -45,13 +58,18 @@ export class EditorInfo extends Component {
 const mapStateToProps = state => {
   return {
     selectedItem: getSelectedItem(state),
-    entityType: state.itemEditor.entityType
+    entityType: state.itemEditor.entityType,
+    textField: state.node.textField
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
-    addNodeClick: () => {
-      const action = node.addNode()
+    addNode: value => {
+      const action = addNode(value)
+      dispatch(action)
+    },
+    handleToggleNodeTextBox: () => {
+      const action = handleToggleNodeTextBox()
       dispatch(action)
     }
   }
