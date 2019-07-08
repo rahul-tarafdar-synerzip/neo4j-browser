@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {
   DrawerSection,
@@ -9,7 +9,7 @@ import { getStringValue } from './utils'
 import * as _ from 'lodash'
 import classNames from 'classnames'
 import styles from '../DatabaseInfo/style_meta.css'
-import { chip, StyledKeyEditor } from './styled'
+import { chip, StyledKeyEditor, EditPropertiesInput } from './styled'
 import { StyledTable, StyledValue } from '../DatabaseInfo/styled'
 
 /**
@@ -83,7 +83,13 @@ export const PropertiesSection = props => {
               <tr>
                 <StyledKeyEditor>{key}:</StyledKeyEditor>
                 <StyledValue data-testid='user-details-username'>
-                  {getStringValue(value)}
+                  <EditPropertiesInput
+                    type='text'
+                    onChange={e => {
+                      props.editProperties(e.target.value)
+                    }}
+                    value={getStringValue(value)}
+                  />
                 </StyledValue>
               </tr>
             </tbody>
@@ -104,8 +110,10 @@ export const PropertiesSection = props => {
     </DrawerSection>
   )
 }
+
 PropertiesSection.propTypes = {
-  properties: PropTypes.object
+  properties: PropTypes.object,
+  editProperties: PropTypes.func
 }
 
 /**
@@ -113,7 +121,7 @@ PropertiesSection.propTypes = {
  * Provides editing capabilities for node labels and properties
  * @param {*} props
  */
-function DisplayNodeDetails (props) {
+const DisplayNodeDetails = props => {
   return (
     <React.Fragment>
       <EntitySection type='Node' />
@@ -121,13 +129,15 @@ function DisplayNodeDetails (props) {
       <PropertiesSection
         properties={props.node ? props.node.properties : null}
         entityType='node'
+        editProperties={props.editProperties}
       />
     </React.Fragment>
   )
 }
 
 DisplayNodeDetails.propTypes = {
-  node: PropTypes.object
+  node: PropTypes.object,
+  editProperties: PropTypes.func
 }
 
 export default DisplayNodeDetails

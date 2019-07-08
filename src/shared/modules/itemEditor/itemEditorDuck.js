@@ -1,15 +1,28 @@
 import { handleCypherCommand } from '../commands/helpers/cypher'
 const initialState = {
   record: undefined,
-  entityType: undefined
+  entityType: undefined,
+  propertyValue: undefined
 }
 
 // Action type constants
 export const NAME = 'itemEditor'
 export const SET_RECORD = `${NAME}/SET_RECORD`
 export const FETCH_DATA_ON_SELECT = `${NAME}/FETCH_DATA_ON_SELECT`
+export const EDIT_PROPERTIES = `${NAME}/EDIT_PROPERTIES`
 
 // Actions
+
+/**
+ *
+ * @param {*} propertyValue The value of selected node or relationship
+ */
+export const editProperties = propertyValue => {
+  return {
+    type: EDIT_PROPERTIES,
+    propertyValue
+  }
+}
 
 /**
  * Fetch data action creator
@@ -31,6 +44,8 @@ export default function reducer (state = initialState, action) {
       return { ...state, record: action.item }
     case FETCH_DATA_ON_SELECT:
       return { ...state, entityType: action.entityType }
+    case EDIT_PROPERTIES:
+      return { ...state, propertyValue: action.propertyValue }
     default:
       return state
   }
