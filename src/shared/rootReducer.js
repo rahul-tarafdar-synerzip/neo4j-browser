@@ -66,7 +66,6 @@ import appReducer, { NAME as app } from 'shared/modules/app/appDuck'
 import itemEditorReducer, {
   NAME as itemEditor
 } from 'shared/modules/itemEditor/itemEditorDuck'
-import nodesReducer, { NAME as node } from 'shared/modules/itemEditor/nodesDuck'
 import experimentalFeaturesReducer, {
   NAME as experimentalFeatures
 } from 'shared/modules/experimentalFeatures/experimentalFeaturesDuck'
@@ -93,6 +92,5 @@ export default {
   [udc]: udcReducer,
   [app]: appReducer,
   [experimentalFeatures]: experimentalFeaturesReducer,
-  [itemEditor]: itemEditorReducer,
-  [node]: nodesReducer
+  [itemEditor]: itemEditorReducer
 }

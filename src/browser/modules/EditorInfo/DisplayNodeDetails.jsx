@@ -73,7 +73,6 @@ LabelSection.propTypes = {
  * Entity Section
  */
 export const EntitySection = props => {
-  console.log('in entity section', props.textField)
   return (
     <DrawerSection>
       <IconButton

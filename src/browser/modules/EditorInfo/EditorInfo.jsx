@@ -10,11 +10,6 @@ import {
 } from 'browser-components/drawer/index'
 import * as itemEditor from 'shared/modules/itemEditor/itemEditorDuck'
 import { getSelectedItem } from 'shared/modules/selectors/itemEditor'
-import {
-  addNode,
-  handleToggleNodeTextBox
-} from '../../../shared/modules/itemEditor/nodesDuck'
-import { NewNodeButton } from '../Sidebar/styled'
 import Node from './Node'
 import * as itemEditorActions from 'shared/modules/itemEditor/itemEditorDuck'
 
@@ -30,11 +25,7 @@ export class EditorInfo extends Component {
         <Drawer>
           <DrawerHeader>
             Editor
-            <NewNodeButton onClick={this.props.handleToggleNodeTextBox} />
-            <Node
-              addNode={this.props.addNode}
-              textField={this.props.textField}
-            />
+            <Node editEntityAction={this.props.editEntityAction} />
           </DrawerHeader>
 
           <DrawerBody>
@@ -63,21 +54,12 @@ export class EditorInfo extends Component {
 const mapStateToProps = state => {
   return {
     selectedItem: getSelectedItem(state),
-    entityType: state.itemEditor.entityType,
-    textField: state.node.textField
+    entityType: state.itemEditor.entityType
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    addNode: value => {
-      const action = addNode(value)
-      dispatch(action)
-    },
-    handleToggleNodeTextBox: () => {
-      const action = handleToggleNodeTextBox()
-      dispatch(action)
-    },
     removeClick: (propertykey, propertyvalue) => {
       const action = itemEditor.removeClick(propertykey, propertyvalue)
       dispatch(action)

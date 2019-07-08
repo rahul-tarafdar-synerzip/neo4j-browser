@@ -116,6 +116,7 @@ export const handleEditEntityEpic = (action$, store) =>
     let cmd
     switch (action.editType) {
       case 'create':
+        cmd = `CREATE (a:${action.firstLabel})`
         break
       case 'update':
         break
