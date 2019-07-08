@@ -11,6 +11,19 @@ import classNames from 'classnames'
 import styles from '../DatabaseInfo/style_meta.css'
 import { chip, StyledKeyEditor, EditPropertiesInput } from './styled'
 import { StyledTable, StyledValue } from '../DatabaseInfo/styled'
+import styled from 'styled-components'
+import { BinIcon, EditIcon } from 'browser-components/icons/Icons'
+import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
+
+const IconButton = styled.button`
+  margin-left: 4px;
+  border: 0;
+  background: white;
+  color: black;
+  &:focus {
+    outline: solid;
+  }
+`
 
 /**
  * Creates items to display in chip format
@@ -62,58 +75,119 @@ LabelSection.propTypes = {
 export const EntitySection = props => {
   return (
     <DrawerSection>
+      <IconButton
+        onClick={() => {
+          props.editEntityAction(
+            props.node.identity.toInt(),
+            props.node.labels[0],
+            'delete',
+            'node'
+          )
+        }}
+      >
+        Delete Node
+      </IconButton>
       <DrawerSubHeader>Entity</DrawerSubHeader>
       {props.type}
     </DrawerSection>
   )
+}
+EntitySection.propTypes = {
+  node: PropTypes.object,
+  editEntityAction: PropTypes.func
 }
 
 /**
  * Properties section
  * @param {*} props
  */
-export const PropertiesSection = props => {
-  let content = []
-  if (props.properties) {
-    content = _.map(props.properties, (value, key) => {
-      return (
-        <div key={key}>
-          <StyledTable>
-            <tbody>
-              <tr>
-                <StyledKeyEditor>{key}:</StyledKeyEditor>
-                <StyledValue data-testid='user-details-username'>
-                  <EditPropertiesInput
-                    type='text'
-                    onChange={e => {
-                      props.editProperties(e.target.value)
-                    }}
-                    value={getStringValue(value)}
-                  />
-                </StyledValue>
-              </tr>
-            </tbody>
-          </StyledTable>
-        </div>
-      )
+export class PropertiesSection extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      properties: this.props.properties,
+      toggleRequested: false
+    }
+  }
+  componentDidUpdate (prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props !== prevProps) {
+      this.setState({
+        properties: this.props.properties,
+        toggleRequested: false
+      })
+    }
+  }
+
+  handleChange = (key, e) => {
+    let newState = _.cloneDeep(this.state)
+    this.setState({
+      ...newState,
+      properties: {
+        ...newState.properties,
+        [key]: getStringValue(e.target.value)
+      },
+      toggleRequested: true
     })
   }
-  if (!content.length) {
-    content.push(
-      <p>{`There are no properties for this ${props.entityType}`}</p>
+
+  render () {
+    let content = []
+    if (this.state.properties) {
+      content = _.map(this.state.properties, (value, key) => {
+        return (
+          <div key={key}>
+            <StyledTable>
+              <tbody>
+                <tr>
+                  <StyledKeyEditor>{key}:</StyledKeyEditor>
+                  <StyledValue data-testid='user-details-username'>
+                    <EditPropertiesInput
+                      id='item'
+                      type='text'
+                      onChange={e => {
+                        this.handleChange(key, e)
+                      }}
+                      value={getStringValue(value)}
+                    />
+                    {console.log(this.state.properties[key])}
+                    <ConfirmationButton
+                      requested={this.state.toggleRequested}
+                      requestIcon={<EditIcon />}
+                      confirmIcon={<EditIcon deleteAction />}
+                      onConfirmed={() => this.props.removeClick(key, value)}
+                    />
+                    <ConfirmationButton
+                      requestIcon={<BinIcon />}
+                      confirmIcon={<BinIcon deleteAction />}
+                      onConfirmed={() => this.props.removeClick(key, value)}
+                    />
+                  </StyledValue>
+                </tr>
+              </tbody>
+            </StyledTable>
+          </div>
+        )
+      })
+    }
+    if (!content.length) {
+      content.push(
+        <p>{`There are no properties for this ${this.props.entityType}`}</p>
+      )
+    }
+
+    return (
+      <DrawerSection>
+        <DrawerSubHeader>Properties</DrawerSubHeader>
+        {content}
+      </DrawerSection>
     )
   }
-  return (
-    <DrawerSection>
-      <DrawerSubHeader>Properties</DrawerSubHeader>
-      {content}
-    </DrawerSection>
-  )
 }
-
 PropertiesSection.propTypes = {
   properties: PropTypes.object,
-  editProperties: PropTypes.func
+  editProperties: PropTypes.func,
+  removeClick: PropTypes.func
 }
 
 /**
@@ -124,12 +198,12 @@ PropertiesSection.propTypes = {
 const DisplayNodeDetails = props => {
   return (
     <React.Fragment>
-      <EntitySection type='Node' />
+      <EntitySection {...props} type='Node' />
       <LabelSection {...props} />
       <PropertiesSection
         properties={props.node ? props.node.properties : null}
         entityType='node'
-        editProperties={props.editProperties}
+        removeClick={props.removeClick}
       />
     </React.Fragment>
   )
@@ -137,7 +211,7 @@ const DisplayNodeDetails = props => {
 
 DisplayNodeDetails.propTypes = {
   node: PropTypes.object,
-  editProperties: PropTypes.func
+  removeClick: PropTypes.func
 }
 
 export default DisplayNodeDetails
