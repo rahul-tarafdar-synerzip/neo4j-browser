@@ -122,13 +122,15 @@ export const PropertiesSection = props => {
                     confirmIcon={<BinIcon deleteAction />}
                     onConfirmed={() => {
                       props.editEntityAction(
-                        props.node
-                          ? props.node.identity.toInt()
-                          : props.relationship.identity.toInt(),
-                        props.node
-                          ? props.node.labels[0]
-                          : props.relationship.type,
-                        key,
+                        {
+                          [props.node ? 'nodeId' : 'relationshipId']: props.node
+                            ? props.node.identity.toInt()
+                            : props.relationship.identity.toInt(),
+                          [props.node ? 'label' : 'type']: props.node
+                            ? props.node.labels[0]
+                            : props.relationship.type,
+                          propertyKey: key
+                        },
                         'delete',
                         props.node ? 'nodeProperty' : 'relationshipProperty'
                       )

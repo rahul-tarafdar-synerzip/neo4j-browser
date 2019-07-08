@@ -110,12 +110,16 @@ export const handleEditEntityEpic = (action$, store) =>
         } else if (action.entityType === 'relationship') {
           // FIXME find out the command for relationship deletion
         } else if (action.entityType === 'nodeProperty') {
-          cmd = `MATCH (a:${action.firstLabel}) where ID(a)=${action.nodeId}
-          REMOVE a.${action.propertyKey} RETURN a, ((a)-->()) , ((a)<--())`
+          cmd = `MATCH (a:${action.editPayload.label}) where ID(a)=${
+            action.editPayload.nodeId
+          }
+          REMOVE a.${
+  action.editPayload.propertyKey
+} RETURN a, ((a)-->()) , ((a)<--())`
         } else if (action.entityType === 'relationshipProperty') {
-          cmd = `MATCH ()-[r:${action.firstLabel}]-() WHERE ID(r)=${
-            action.nodeId
-          } REMOVE r.${action.propertyKey} RETURN r`
+          cmd = `MATCH ()-[r:${action.editPayload.type}]-() WHERE ID(r)=${
+            action.editPayload.relationshipId
+          } REMOVE r.${action.editPayload.propertyKey} RETURN r`
         }
         break
     }
