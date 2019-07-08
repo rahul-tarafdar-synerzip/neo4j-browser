@@ -39,32 +39,29 @@ class Node extends Component {
               <DrawerSection>
                 <DrawerSectionBody>
                   <StyledTable>
-                    <tbody>
-                      <tr>
-                        <StyledKey>Label:</StyledKey>
-                        <StyledValue>
-                          <TextInput
-                            id='nodeLabel'
-                            style={{
-                              width: '120px'
-                            }}
-                            onChange={this.handleChange}
-                          />
-                        </StyledValue>
-                        <ConfirmationButton
-                          requestIcon={<PlusIcon />}
-                          confirmIcon={<TickMarkIcon doneAction />}
-                          onConfirmed={() =>
-                            this.props.editEntityAction(
-                              undefined,
-                              this.state.nodeLabel,
-                              'create',
-                              'node'
-                            )
-                          }
-                        />
-                      </tr>
-                    </tbody>
+                    <StyledKey>Label:</StyledKey>
+                    <StyledValue>
+                      <TextInput
+                        id='nodeLabel'
+                        style={{
+                          width: '120px'
+                        }}
+                        onChange={this.handleChange}
+                      />
+                    </StyledValue>
+                    <ConfirmationButton
+                      requestIcon={<PlusIcon />}
+                      confirmIcon={<TickMarkIcon doneAction />}
+                      onConfirmed={() =>
+                        this.props.editEntityAction(
+                          {
+                            nodeLabel: this.state.nodeLabel
+                          },
+                          'create',
+                          'node'
+                        )
+                      }
+                    />
                   </StyledTable>
                 </DrawerSectionBody>
               </DrawerSection>

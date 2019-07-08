@@ -75,20 +75,24 @@ LabelSection.propTypes = {
 export const EntitySection = props => {
   return (
     <DrawerSection>
-      <IconButton
-        onClick={() => {
-          props.editEntityAction(
-            props.node.identity.toInt(),
-            props.node.labels[0],
-            'delete',
-            'node'
-          )
-        }}
-      >
-        Delete Node
-      </IconButton>
       <DrawerSubHeader>Entity</DrawerSubHeader>
       {props.type}
+      {props.type === 'Node' && (
+        <ConfirmationButton
+          requestIcon={<BinIcon />}
+          confirmIcon={<BinIcon deleteAction />}
+          onConfirmed={() => {
+            props.editEntityAction(
+              {
+                nodeId: props.node.identity.toInt(),
+                firstLabel: props.node.labels[0]
+              },
+              'delete',
+              'node'
+            )
+          }}
+        />
+      )}
     </DrawerSection>
   )
 }
@@ -116,7 +120,21 @@ export const PropertiesSection = props => {
                   <ConfirmationButton
                     requestIcon={<BinIcon />}
                     confirmIcon={<BinIcon deleteAction />}
-                    onConfirmed={() => props.removeClick(key, value)}
+                    onConfirmed={() => {
+                      props.editEntityAction(
+                        {
+                          [props.node ? 'nodeId' : 'relationshipId']: props.node
+                            ? props.node.identity.toInt()
+                            : props.relationship.identity.toInt(),
+                          [props.node ? 'label' : 'type']: props.node
+                            ? props.node.labels[0]
+                            : props.relationship.type,
+                          propertyKey: key
+                        },
+                        'delete',
+                        props.node ? 'nodeProperty' : 'relationshipProperty'
+                      )
+                    }}
                   />
                 </StyledValue>
               </tr>
@@ -140,7 +158,7 @@ export const PropertiesSection = props => {
 }
 PropertiesSection.propTypes = {
   properties: PropTypes.object,
-  removeClick: PropTypes.func
+  editEntityAction: PropTypes.func
 }
 
 /**
@@ -154,9 +172,10 @@ function DisplayNodeDetails (props) {
       <EntitySection {...props} type='Node' />
       <LabelSection {...props} />
       <PropertiesSection
+        {...props}
         properties={props.node ? props.node.properties : null}
+        editEntityAction={props.editEntityAction}
         entityType='node'
-        removeClick={props.removeClick}
       />
     </React.Fragment>
   )
@@ -164,7 +183,7 @@ function DisplayNodeDetails (props) {
 
 DisplayNodeDetails.propTypes = {
   node: PropTypes.object,
-  removeClick: PropTypes.func
+  editEntityAction: PropTypes.func
 }
 
 export default DisplayNodeDetails

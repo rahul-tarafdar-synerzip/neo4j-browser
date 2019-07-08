@@ -8,7 +8,6 @@ import {
   DrawerHeader,
   DrawerBody
 } from 'browser-components/drawer/index'
-import * as itemEditor from 'shared/modules/itemEditor/itemEditorDuck'
 import { getSelectedItem } from 'shared/modules/selectors/itemEditor'
 import Node from './Node'
 import * as itemEditorActions from 'shared/modules/itemEditor/itemEditorDuck'
@@ -33,14 +32,13 @@ export class EditorInfo extends Component {
               this.props.entityType === 'node' ? (
                 <DisplayNodeDetails
                   node={this.props.selectedItem}
-                  addNode={this.props.addNode}
-                  textField={this.props.textField}
                   editEntityAction={this.props.editEntityAction}
                   removeClick={this.props.removeClick}
                 />
               ) : (
                 <DisplayRelationshipDetails
                   relationship={this.props.selectedItem}
+                  editEntityAction={this.props.editEntityAction}
                 />
               )
             ) : null}
@@ -60,14 +58,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    removeClick: (propertykey, propertyvalue) => {
-      const action = itemEditor.removeClick(propertykey, propertyvalue)
-      dispatch(action)
-    },
-    editEntityAction: (nodeId, firstLabel, editType, entityType) => {
+    editEntityAction: (editPayload, editType, entityType) => {
       const action = itemEditorActions.editEntityAction(
-        nodeId,
-        firstLabel,
+        editPayload,
         editType,
         entityType
       )
