@@ -85,7 +85,9 @@ export const handleFetchDataEpic = (action$, store) =>
         return noop
       })
     }
-    let cmd = `MATCH (a) where id(a)=${action.id} RETURN a, ((a)-->()) , ((a)<--())`
+    let cmd = `MATCH (a) where id(a)=${
+      action.id
+    } RETURN a, ((a)-->()) , ((a)<--())`
     if (action.entityType === 'relationship') {
       cmd = `MATCH ()-[r]->() where id(r)=${action.id} RETURN r`
     }
@@ -120,7 +122,9 @@ export const handleEditEntityEpic = (action$, store) =>
         break
       case 'delete':
         if (action.entityType === 'node') {
-          cmd = `MATCH (p:${action.firstLabel}) where ID(p)=${action.nodeId} OPTIONAL MATCH (p)-[r]-() DELETE r,p`
+          cmd = `MATCH (a:${action.firstLabel}) where ID(a)=${
+            action.nodeId
+          } OPTIONAL MATCH (a)-[r]-() DELETE r,a`
         } else if (action.entityType === 'relationship') {
           // FIXME find out the command for relationship deletion
         }

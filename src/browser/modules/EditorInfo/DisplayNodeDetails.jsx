@@ -75,20 +75,24 @@ LabelSection.propTypes = {
 export const EntitySection = props => {
   return (
     <DrawerSection>
-      <IconButton
-        onClick={() => {
-          props.editEntityAction(
-            props.node.identity.toInt(),
-            props.node.labels[0],
-            'delete',
-            'node'
-          )
-        }}
-      >
-        Delete Node
-      </IconButton>
       <DrawerSubHeader>Entity</DrawerSubHeader>
       {props.type}
+      {props.type === 'Node' && (
+        <ConfirmationButton
+          requestIcon={<BinIcon />}
+          confirmIcon={<BinIcon deleteAction />}
+          onConfirmed={() => {
+            props.editEntityAction(
+              props.node.identity.toInt(),
+              props.node.labels[0],
+              'delete',
+              'node'
+            )
+          }}
+        >
+          Delete Node
+        </ConfirmationButton>
+      )}
     </DrawerSection>
   )
 }
