@@ -11,6 +11,19 @@ import classNames from 'classnames'
 import styles from '../DatabaseInfo/style_meta.css'
 import { chip, StyledKeyEditor } from './styled'
 import { StyledTable, StyledValue } from '../DatabaseInfo/styled'
+import styled from 'styled-components'
+import { BinIcon } from 'browser-components/icons/Icons'
+import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
+
+const IconButton = styled.button`
+  margin-left: 4px;
+  border: 0;
+  background: white;
+  color: black;
+  &:focus {
+    outline: solid;
+  }
+`
 
 /**
  * Creates items to display in chip format
@@ -63,13 +76,26 @@ export const EntitySection = props => {
   console.log('in entity section', props.textField)
   return (
     <DrawerSection>
+      <IconButton
+        onClick={() => {
+          props.editEntityAction(
+            props.node.identity.toInt(),
+            props.node.labels[0],
+            'delete',
+            'node'
+          )
+        }}
+      >
+        Delete Node
+      </IconButton>
       <DrawerSubHeader>Entity</DrawerSubHeader>
       {props.type}
     </DrawerSection>
   )
 }
 EntitySection.propTypes = {
-  addNodeClick: PropTypes.func
+  node: PropTypes.object,
+  editEntityAction: PropTypes.func
 }
 
 /**
@@ -88,6 +114,11 @@ export const PropertiesSection = props => {
                 <StyledKeyEditor>{key}:</StyledKeyEditor>
                 <StyledValue data-testid='user-details-username'>
                   {getStringValue(value)}
+                  <ConfirmationButton
+                    requestIcon={<BinIcon />}
+                    confirmIcon={<BinIcon deleteAction />}
+                    onConfirmed={() => props.removeClick(key, value)}
+                  />
                 </StyledValue>
               </tr>
             </tbody>
@@ -109,7 +140,8 @@ export const PropertiesSection = props => {
   )
 }
 PropertiesSection.propTypes = {
-  properties: PropTypes.object
+  properties: PropTypes.object,
+  removeClick: PropTypes.func
 }
 
 /**
@@ -120,18 +152,20 @@ PropertiesSection.propTypes = {
 function DisplayNodeDetails (props) {
   return (
     <React.Fragment>
-      <EntitySection type='Node' />
+      <EntitySection {...props} type='Node' />
       <LabelSection {...props} />
       <PropertiesSection
         properties={props.node ? props.node.properties : null}
         entityType='node'
+        removeClick={props.removeClick}
       />
     </React.Fragment>
   )
 }
 
 DisplayNodeDetails.propTypes = {
-  node: PropTypes.object
+  node: PropTypes.object,
+  removeClick: PropTypes.func
 }
 
 export default DisplayNodeDetails
