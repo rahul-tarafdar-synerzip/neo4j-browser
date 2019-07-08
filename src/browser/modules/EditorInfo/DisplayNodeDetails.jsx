@@ -75,20 +75,24 @@ LabelSection.propTypes = {
 export const EntitySection = props => {
   return (
     <DrawerSection>
-      <IconButton
-        onClick={() => {
-          props.editEntityAction(
-            props.node.identity.toInt(),
-            props.node.labels[0],
-            'delete',
-            'node'
-          )
-        }}
-      >
-        Delete Node
-      </IconButton>
       <DrawerSubHeader>Entity</DrawerSubHeader>
       {props.type}
+      {props.type === 'Node' && (
+        <ConfirmationButton
+          requestIcon={<BinIcon />}
+          confirmIcon={<BinIcon deleteAction />}
+          onConfirmed={() => {
+            props.editEntityAction(
+              {
+                nodeId: props.node.identity.toInt(),
+                firstLabel: props.node.labels[0]
+              },
+              'delete',
+              'node'
+            )
+          }}
+        />
+      )}
     </DrawerSection>
   )
 }
@@ -160,7 +164,26 @@ export class PropertiesSection extends Component {
                     <ConfirmationButton
                       requestIcon={<BinIcon />}
                       confirmIcon={<BinIcon deleteAction />}
-                      onConfirmed={() => this.props.removeClick(key, value)}
+                      onConfirmed={() => {
+                        this.props.editEntityAction(
+                          {
+                            [this.props.node
+                              ? 'nodeId'
+                              : 'relationshipId']: this.props.node
+                              ? this.props.node.identity.toInt()
+                              : this.props.relationship.identity.toInt(),
+                            [this.props.node ? 'label' : 'type']: this.props
+                              .node
+                              ? this.props.node.labels[0]
+                              : this.props.relationship.type,
+                            propertyKey: key
+                          },
+                          'delete',
+                          this.props.node
+                            ? 'nodeProperty'
+                            : 'relationshipProperty'
+                        )
+                      }}
                     />
                   </StyledValue>
                 </tr>
@@ -186,8 +209,7 @@ export class PropertiesSection extends Component {
 }
 PropertiesSection.propTypes = {
   properties: PropTypes.object,
-  editProperties: PropTypes.func,
-  removeClick: PropTypes.func
+  editEntityAction: PropTypes.func
 }
 
 /**
@@ -201,9 +223,10 @@ const DisplayNodeDetails = props => {
       <EntitySection {...props} type='Node' />
       <LabelSection {...props} />
       <PropertiesSection
+        {...props}
         properties={props.node ? props.node.properties : null}
+        editEntityAction={props.editEntityAction}
         entityType='node'
-        removeClick={props.removeClick}
       />
     </React.Fragment>
   )
@@ -211,7 +234,7 @@ const DisplayNodeDetails = props => {
 
 DisplayNodeDetails.propTypes = {
   node: PropTypes.object,
-  removeClick: PropTypes.func
+  editEntityAction: PropTypes.func
 }
 
 export default DisplayNodeDetails
