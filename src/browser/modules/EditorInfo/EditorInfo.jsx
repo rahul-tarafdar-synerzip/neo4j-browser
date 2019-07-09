@@ -31,9 +31,11 @@ export class EditorInfo extends Component {
             {this.props.selectedItem ? (
               this.props.entityType === 'node' ? (
                 <DisplayNodeDetails
-                  node={this.props.selectedItem}
                   editEntityAction={this.props.editEntityAction}
-                  removeClick={this.props.removeClick}
+                  node={this.props.selectedItem.node}
+                  fromSelectedNode={this.props.selectedItem.fromSelectedNode}
+                  toSelectedNode={this.props.selectedItem.toSelectedNode}
+                  entityType={this.props.entityType}
                 />
               ) : (
                 <DisplayRelationshipDetails
