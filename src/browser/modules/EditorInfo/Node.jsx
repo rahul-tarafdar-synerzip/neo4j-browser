@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { StyledTable, StyledValue, StyledKey } from '../DatabaseInfo/styled'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
@@ -11,70 +11,62 @@ import {
   DrawerSectionBody
 } from 'browser-components/drawer/index'
 import { TextInput } from 'browser-components/Form'
-class Node extends Component {
-  state = {
-    nodeLabel: undefined,
-    textField: false
-  }
+import { withState, withHandlers, compose } from 'recompose'
 
-  handleToggle = () => {
-    this.setState({
-      textField: !this.state.textField
-    })
-  }
-
-  handleChange = event => {
-    this.setState({
-      [event.target.id]: event.target.value
-    })
-  }
-
-  render () {
-    return (
-      <React.Fragment>
-        <NewNodeButton onClick={this.handleToggle} />
-        {this.state.textField === true ? (
-          <Drawer>
-            <DrawerBody>
-              <DrawerSection>
-                <DrawerSectionBody>
-                  <StyledTable>
-                    <StyledKey>Label:</StyledKey>
-                    <StyledValue>
-                      <TextInput
-                        id='nodeLabel'
-                        style={{
-                          width: '120px'
-                        }}
-                        onChange={this.handleChange}
-                      />
-                    </StyledValue>
-                    <ConfirmationButton
-                      requestIcon={<PlusIcon />}
-                      confirmIcon={<TickMarkIcon doneAction />}
-                      onConfirmed={() =>
-                        this.props.editEntityAction(
-                          {
-                            nodeLabel: this.state.nodeLabel
-                          },
-                          'create',
-                          'node'
-                        )
-                      }
+function Node ({ textField, handleToggle, handleChange, editEntityAction }) {
+  return (
+    <React.Fragment>
+      <NewNodeButton onClick={() => handleToggle(!textField)} />
+      {textField ? (
+        <Drawer>
+          <DrawerBody>
+            <DrawerSection>
+              <DrawerSectionBody>
+                <StyledTable>
+                  <StyledKey>Label:</StyledKey>
+                  <StyledValue>
+                    <TextInput
+                      id='nodeLabel'
+                      style={{
+                        width: '120px'
+                      }}
+                      onChange={() => {
+                        handleChange(([event.target.id] = event.target.value))
+                      }}
                     />
-                  </StyledTable>
-                </DrawerSectionBody>
-              </DrawerSection>
-            </DrawerBody>
-          </Drawer>
-        ) : null}
-      </React.Fragment>
-    )
-  }
+                  </StyledValue>
+                  <ConfirmationButton
+                    requestIcon={<PlusIcon />}
+                    confirmIcon={<TickMarkIcon doneAction />}
+                    onConfirmed={editEntityAction}
+                  />
+                </StyledTable>
+              </DrawerSectionBody>
+            </DrawerSection>
+          </DrawerBody>
+        </Drawer>
+      ) : null}
+    </React.Fragment>
+  )
 }
 
+const enhance = compose(
+  withState('textField', 'handleToggle', false),
+  withState('nodeLabel', 'handleChange', undefined),
+  withHandlers({
+    editEntityAction: props => () => {
+      props.editEntityAction(
+        {
+          nodeLabel: props.nodeLabel
+        },
+        'create',
+        'node'
+      )
+    }
+  })
+)
 Node.propTypes = {
   editEntityAction: PropTypes.func
 }
 
-export default Node
+export default enhance(Node)
