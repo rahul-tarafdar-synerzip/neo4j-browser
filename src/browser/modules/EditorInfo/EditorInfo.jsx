@@ -11,7 +11,7 @@ import {
 import * as itemEditor from 'shared/modules/itemEditor/itemEditorDuck'
 import { getSelectedItem } from 'shared/modules/selectors/itemEditor'
 import * as itemEditorActions from 'shared/modules/itemEditor/itemEditorDuck'
-
+import CreateProperty from './CreateProperty'
 /**
  * The Editor drawer.
  * Based on selection, either provides node editor or relationship editor.
@@ -37,6 +37,7 @@ export class EditorInfo extends Component {
                 />
               )
             ) : null}
+            <CreateProperty editEntityAction={this.props.editEntityAction} />
           </DrawerBody>
         </Drawer>
       </div>

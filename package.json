@@ -121,6 +121,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
+    "@material-ui/core": "^4.2.0",
     "ascii-data-table": "^2.1.1",
     "classnames": "^2.2.5",
     "codemirror": "^5.29.0",
@@ -143,6 +144,7 @@
     "react-redux": "^5.0.7",
     "react-suber": "1.0.4",
     "react-svg-inline": "^2.1.1",
+    "react-text-mask": "^5.4.3",
     "react-timeago": "^4.1.9",
     "redux": "^3.7.2",
     "redux-observable": "^0.16.0",
@@ -151,6 +153,7 @@
     "save-as": "^0.1.7",
     "semver": "^5.5.0",
     "styled-components": "^4.0.0",
+    "styled-icons": "^8.1.0",
     "stylis": "^3.4.10",
     "suber": "^5.0.1",
     "swipe-js-iso": "^2.0.4",
