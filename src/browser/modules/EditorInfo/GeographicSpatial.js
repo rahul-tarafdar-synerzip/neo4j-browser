@@ -54,19 +54,9 @@ class GeographicSpatial extends React.Component {
         <div>
           Latitude :
           <Input
-            style={
-              this.props.numCheck
-                ? {
-                    width: '120px'
-                  }
-                : {
-                    borderColor: 'crimson',
-                    borderWidth: '2px',
-                    width: '120px'
-                  }
-            }
+            style={{ width: '120px' }}
             className={classes.style}
-            value={this.props.geographicValue.latitude}
+            value={this.props.propValue.latitude}
             onChange={e => {
               this.props.handleChange('geographical-Spatial', e.target)
             }}
@@ -77,17 +67,9 @@ class GeographicSpatial extends React.Component {
         <div>
           Longitude:
           <Input
-            style={
-              this.props.numCheck
-                ? { width: '120px' }
-                : {
-                    borderColor: 'crimson',
-                    borderWidth: '2px',
-                    width: '120px'
-                  }
-            }
+            style={{ width: '120px' }}
             className={classes.style}
-            value={this.props.geographicValue.longitude}
+            value={this.props.propValue.longitude}
             onChange={e => {
               this.props.handleChange('geographical-Spatial', e.target)
             }}
@@ -98,17 +80,9 @@ class GeographicSpatial extends React.Component {
         <div>
           height:
           <Input
-            style={
-              this.props.numCheck
-                ? { width: '120px' }
-                : {
-                    borderColor: 'crimson',
-                    borderWidth: '2px',
-                    width: '120px'
-                  }
-            }
+            style={{ width: '120px' }}
             className={classes.style}
-            value={this.props.geographicValue.height}
+            value={this.props.propValue.height}
             onChange={e => {
               this.props.handleChange('geographical-Spatial', e.target)
             }}

@@ -98,6 +98,10 @@ export const handleEditEntityEpic = (action$, store) =>
     let cmd
     switch (action.editType) {
       case 'create':
+        cmd = `CREATE (a:Kirthi99 { ${action.editPayload.key} : "${
+          action.editPayload.value
+        }" })`
+        // cmd = `CREATE (a:Shatakshi { Name : "myName" })`;
         break
       case 'update':
         break

@@ -45,16 +45,17 @@ export class AddProperty extends Component {
       values: {
         validFlag: false,
         numCheck: false,
-        boolValue: false,
-        textValue: '',
-        numberValue: '',
+        propValue: undefined,
+        // boolValue: false,
+        // textValue: "",
+        // numberValue: "",
         selectedDate: {
           year: new Date().getFullYear,
           month: new Date().getMonth,
           day: new Date().getDate
-        },
-        geographicValue: { index: '', latitude: '', longitude: '', height: '' },
-        cartesianValue: { index: '', X: '', Y: '', Z: '' }
+        }
+        // geographicValue: { index: "", latitude: "", longitude: "", height: "" },
+        // cartesianValue: { index: "", X: "", Y: "", Z: "" }
       }
     }
   }
@@ -73,16 +74,17 @@ export class AddProperty extends Component {
       validFlag: false,
       textField: false,
       numCheck: false,
-      boolValue: false,
-      textValue: '',
-      numberValue: '',
+      propValue: undefined,
+      // boolValue: false,
+      // textValue: "",
+      // numberValue: "",
       selectedDate: {
         year: new Date().getFullYear,
         month: new Date().getMonth,
         day: new Date().getDate
-      },
-      geographicValue: { index: '', latitude: '', longitude: '', height: '' },
-      cartesianValue: { index: '', X: '', Y: '', Z: '' }
+      }
+      // geographicValue: { index: "", latitude: "", longitude: "", height: "" },
+      // cartesianValue: { index: "", X: "", Y: "", Z: "" }
     }
     return values
   }
@@ -90,7 +92,6 @@ export class AddProperty extends Component {
   /**
    * This method is used to toggle the calender display on icon click
    */
-
   toggleCalender = () => {
     this.setState({
       calenderFlag: !this.state.calenderFlag
@@ -109,8 +110,8 @@ export class AddProperty extends Component {
         break
       case 'number':
         const numberRegEx = /^[0-9\b]+$/
-        values.numberValue = value
-        if (values.numberValue === '') {
+        values.propValue = value
+        if (values.propValue === '') {
           values.validFlag = false
           values.numCheck = false
         } else {
@@ -122,16 +123,15 @@ export class AddProperty extends Component {
         this.setState({ values })
         break
       case 'string':
-        values.textValue = value
+        values.propValue = value
         values.numCheck = true
-        values.textValue === ''
+        values.propValue === ''
           ? (values.validFlag = false)
           : (values.validFlag = true)
         this.setState({ values })
         break
       case 'geographical-Spatial':
-        values.geographicValue.latitude !== '' &&
-        values.geographicValue.longitude !== ''
+        values.propValue.latitude !== '' && values.propValue.longitude !== ''
           ? (values.validFlag = true)
           : (values.validFlag = false)
         if (value.id === 'height' && value.value === '__.__') {
@@ -141,12 +141,12 @@ export class AddProperty extends Component {
             ? (values.numCheck = true)
             : (values.numCheck = false)
         }
-        values.geographicValue[value.id] = value.value
+        values.propValue[value.id] = value.value
         this.setState({ values })
         break
       case 'cartesian-Spatial':
-        values.cartesianValue[value.id] = value.value
-        values.cartesianValue.X !== '' && values.cartesianValue.Y !== ''
+        values.propValue[value.id] = value.value
+        values.propValue.X !== '' && values.propValue.Y !== ''
           ? (values.validFlag = true)
           : (values.validFlag = false)
         if (value.id === 'Z' && value.value === '') {
@@ -159,7 +159,7 @@ export class AddProperty extends Component {
         this.setState({ values })
         break
       case 'boolean':
-        values.boolValue = value
+        values.propValue = value
         values.validFlag = true
         values.numCheck = true
         this.setState({ values })
@@ -170,6 +170,7 @@ export class AddProperty extends Component {
         values.selectedDate.year = newDate.getUTCFullYear()
         values.selectedDate.month = 1 + newDate.getUTCMonth()
         values.selectedDate.day = newDate.getUTCDate()
+        values.propValue = values.selectedDate.toISOString()
         values.validFlag = true
         values.numCheck = true
         this.setState({ values })
@@ -191,27 +192,17 @@ export class AddProperty extends Component {
 
   render () {
     let propertyValueInput = null
-    let textStyle = {
-      borderColor: 'crimson',
-      borderWidth: '2px',
-      width: '120px'
-    }
-    let validStyle = {
-      borderColor: 'green',
-      borderWidth: '2px',
-      width: '120px'
-    }
     const options = ['true', 'false']
     switch (this.state.propertyType) {
       case 'number':
         propertyValueInput = (
           <TextInput
-            style={this.state.values.numCheck ? { width: '120px' } : textStyle}
+            style={{ width: '120px' }}
             id='number'
             onChange={e => {
               this.handleChange(e.target.id, e.target.value)
             }}
-            value={this.state.values.numberValue}
+            value={this.state.values.propValue}
           />
         )
         break
@@ -245,14 +236,12 @@ export class AddProperty extends Component {
       case 'string':
         propertyValueInput = (
           <TextInput
-            style={{
-              width: '120px'
-            }}
+            style={{ width: '120px' }}
             id='string'
             onChange={e => {
               this.handleChange(e.target.id, e.target.value)
             }}
-            value={this.state.values.textValue}
+            value={this.state.values.propValue}
           />
         )
         break
@@ -260,7 +249,7 @@ export class AddProperty extends Component {
         propertyValueInput = (
           <GeographicSpatial
             handleChange={this.handleChange}
-            geographicValue={this.state.values.geographicValue}
+            propValue={this.state.values.propValue}
             numCheck={this.state.values.numCheck}
           />
         )
@@ -269,7 +258,7 @@ export class AddProperty extends Component {
         propertyValueInput = (
           <CartesianSpatial
             handleChange={this.handleChange}
-            cartesianValue={this.state.values.cartesianValue}
+            propValue={this.state.values.propValue}
             numCheck={this.state.values.numCheck}
           />
         )
@@ -282,7 +271,7 @@ export class AddProperty extends Component {
             onChange={e => {
               this.handleChange('boolean', e.target.value)
             }}
-            selectedValue={this.state.values.boolValue}
+            selectedValue={this.state.values.propValue}
           />
         )
         break
@@ -310,9 +299,7 @@ export class AddProperty extends Component {
                             onChange={e => {
                               this.handleChange(e.target.id, e.target.value)
                             }}
-                            style={{
-                              width: '120px'
-                            }}
+                            style={{ width: '120px' }}
                           />
                         </StyledValue>
                       </tr>
@@ -336,12 +323,13 @@ export class AddProperty extends Component {
                       </tr>
                       <ConfirmationButton
                         requestIcon={<PlusIcon />}
-                        confirmIcon={<BinIcon doneAction />}
+                        confirmIcon={<BinIcon deleteAction />}
                         onConfirmed={() =>
+                          // this.abc(this.state.propertyType,this.state.value )
                           this.props.editEntityAction(
                             {
                               key: this.state.key,
-                              value: this.state.values.textValue
+                              value: this.state.values.propValue
                             },
                             'create',
                             'node'

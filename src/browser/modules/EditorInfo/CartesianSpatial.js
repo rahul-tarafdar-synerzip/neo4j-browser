@@ -34,19 +34,9 @@ class CartesianSpatial extends React.Component {
         <div>
           X :<br />
           <Input
-            style={
-              this.props.numCheck
-                ? {
-                    width: '120px'
-                  }
-                : {
-                    borderColor: 'crimson',
-                    borderWidth: '2px',
-                    width: '120px'
-                  }
-            }
+            style={{ width: '120px' }}
             className={classes.style}
-            value={this.props.cartesianValue.X}
+            value={this.props.propValue.X}
             onChange={e => {
               this.props.handleChange('cartesian-Spatial', e.target)
             }}
@@ -56,19 +46,9 @@ class CartesianSpatial extends React.Component {
         <div>
           Y :<br />
           <Input
-            style={
-              this.props.numCheck
-                ? {
-                    width: '120px'
-                  }
-                : {
-                    borderColor: 'crimson',
-                    borderWidth: '2px',
-                    width: '120px'
-                  }
-            }
+            style={{ width: '120px' }}
             className={classes.style}
-            value={this.props.cartesianValue.Y}
+            value={this.props.propValue.Y}
             onChange={e => {
               this.props.handleChange('cartesian-Spatial', e.target)
             }}
@@ -78,19 +58,9 @@ class CartesianSpatial extends React.Component {
         <div>
           Z :<br />
           <Input
-            style={
-              this.props.numCheck
-                ? {
-                    width: '120px'
-                  }
-                : {
-                    borderColor: 'crimson',
-                    borderWidth: '2px',
-                    width: '120px'
-                  }
-            }
+            style={{ width: '120px' }}
             className={classes.style}
-            value={this.props.cartesianValue.Z}
+            value={this.props.propValue.Z}
             onChange={e => {
               this.props.handleChange('cartesian-Spatial', e.target)
             }}
