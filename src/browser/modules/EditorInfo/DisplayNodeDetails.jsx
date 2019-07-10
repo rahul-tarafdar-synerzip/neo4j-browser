@@ -100,23 +100,26 @@ export const PropertiesSection = props => {
     properties: { ...props.properties }
   }
 
-  const [state, setState] = useState(initState)
+  const [propertiesState, updatePropertiesState] = useState(initState)
 
   /**
    * useEffect accepts a function that updates the state whenever the props change
-   * @param setState — Function that returns an updated state everytime props change
+   * @param updatePropertiesState — Function that returns an updated state everytime props change
    * @param deps —  Will activate when the props change
    */
   useEffect(
     () => {
-      setState({ ...state, properties: { ...props.properties } })
+      updatePropertiesState({
+        ...propertiesState,
+        properties: { ...props.properties }
+      })
     },
     [props.properties]
   )
 
   const handleChange = (key, e) => {
-    let newState = _.cloneDeep(state)
-    setState({
+    let newState = _.cloneDeep(propertiesState)
+    updatePropertiesState({
       ...newState,
       properties: {
         ...newState.properties,
@@ -126,8 +129,8 @@ export const PropertiesSection = props => {
   }
 
   let content = []
-  if (state.properties) {
-    content = _.map(state.properties, (value, key) => {
+  if (propertiesState.properties) {
+    content = _.map(propertiesState.properties, (value, key) => {
       return (
         <div key={key}>
           <StyledTable>
