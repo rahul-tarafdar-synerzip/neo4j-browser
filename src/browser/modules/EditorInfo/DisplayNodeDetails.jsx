@@ -10,9 +10,19 @@ import * as _ from 'lodash'
 import classNames from 'classnames'
 import styles from '../DatabaseInfo/style_meta.css'
 import { chip, StyledKeyEditor, EditPropertiesInput } from './styled'
-import { StyledTable, StyledValue } from '../DatabaseInfo/styled'
-import { BinIcon, EditIcon } from 'browser-components/icons/Icons'
+import {
+  StyledTable,
+  StyledValue,
+  StyledRelationship
+} from '../DatabaseInfo/styled'
+import {
+  BinIcon,
+  EditIcon,
+  ExpandMenuIcon,
+  CollapseMenuIcon
+} from 'browser-components/icons/Icons'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
+import { FoldersButton } from '../Sidebar/styled'
 
 /**
  * Creates items to display in chip format
@@ -253,8 +263,11 @@ const showRelationshipDetails = (
                 <StyledValue data-testid='user-details-username'>
                   {relationshipEndpoint === 'from' && ' ----> '}
                   {relationshipEndpoint === 'to' && ' <---- '}
+                  {/* displaying node ID */}
                   {value.end.identity.toInt()}
+                  {/* displaying relationship type */}
                 </StyledValue>
+                <ExpandDetails value={value} />
               </tr>
             </tbody>
           </StyledTable>
@@ -270,6 +283,29 @@ const showRelationshipDetails = (
   }
   return relationShipArray
 }
+
+/**
+ * Component to Expand Relationship Details
+ * @param {*} props
+ */
+const ExpandDetails = props => {
+  const [active, setFlag] = useState(false)
+  return (
+    <FoldersButton onClick={() => setFlag(!active)}>
+      {active === true ? <CollapseMenuIcon /> : <ExpandMenuIcon />}
+      {active === true && (
+        <StyledRelationship>
+          {props.value.segments.map((item, index) => item.relationship.type)}
+        </StyledRelationship>
+      )}
+    </FoldersButton>
+  )
+}
+
+ExpandDetails.propTypes = {
+  value: PropTypes.object
+}
+
 /**
  * Relationship Section
  */
