@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { StyledTable, StyledValue, StyledKey } from '../DatabaseInfo/styled'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
@@ -11,9 +11,10 @@ import {
   DrawerSectionBody
 } from 'browser-components/drawer/index'
 import { TextInput } from 'browser-components/Form'
-import { withState, withHandlers, compose } from 'recompose'
 
-function Node ({ textField, handleToggle, handleChange, editEntityAction }) {
+function Node (props) {
+  const [textField, handleToggle] = useState(false)
+  const [nodeLabel, handleChange] = useState(undefined)
   return (
     <React.Fragment>
       <NewNodeButton onClick={() => handleToggle(!textField)} />
@@ -38,7 +39,13 @@ function Node ({ textField, handleToggle, handleChange, editEntityAction }) {
                   <ConfirmationButton
                     requestIcon={<PlusIcon />}
                     confirmIcon={<TickMarkIcon doneAction />}
-                    onConfirmed={editEntityAction}
+                    onConfirmed={() =>
+                      props.editEntityAction(
+                        { nodeLabel: nodeLabel },
+                        'create',
+                        'node'
+                      )
+                    }
                   />
                 </StyledTable>
               </DrawerSectionBody>
@@ -50,23 +57,8 @@ function Node ({ textField, handleToggle, handleChange, editEntityAction }) {
   )
 }
 
-const enhance = compose(
-  withState('textField', 'handleToggle', false),
-  withState('nodeLabel', 'handleChange', undefined),
-  withHandlers({
-    editEntityAction: props => () => {
-      props.editEntityAction(
-        {
-          nodeLabel: props.nodeLabel
-        },
-        'create',
-        'node'
-      )
-    }
-  })
-)
 Node.propTypes = {
   editEntityAction: PropTypes.func
 }
 
-export default enhance(Node)
+export default Node
