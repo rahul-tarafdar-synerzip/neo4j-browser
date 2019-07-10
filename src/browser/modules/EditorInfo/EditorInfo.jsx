@@ -8,7 +8,6 @@ import {
   DrawerHeader,
   DrawerBody
 } from 'browser-components/drawer/index'
-import * as itemEditor from 'shared/modules/itemEditor/itemEditorDuck'
 import { getSelectedItem } from 'shared/modules/selectors/itemEditor'
 import * as itemEditorActions from 'shared/modules/itemEditor/itemEditorDuck'
 import CreateProperty from './CreateProperty'
@@ -28,12 +27,15 @@ export class EditorInfo extends Component {
               this.props.entityType === 'node' ? (
                 <DisplayNodeDetails
                   editEntityAction={this.props.editEntityAction}
-                  node={this.props.selectedItem}
-                  removeClick={this.props.removeClick}
+                  node={this.props.selectedItem.node}
+                  fromSelectedNode={this.props.selectedItem.fromSelectedNode}
+                  toSelectedNode={this.props.selectedItem.toSelectedNode}
+                  entityType={this.props.entityType}
                 />
               ) : (
                 <DisplayRelationshipDetails
                   relationship={this.props.selectedItem}
+                  editEntityAction={this.props.editEntityAction}
                 />
               )
             ) : null}
@@ -53,14 +55,9 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    removeClick: (propertykey, propertyvalue) => {
-      const action = itemEditor.removeClick(propertykey, propertyvalue)
-      dispatch(action)
-    },
-    editEntityAction: (nodeId, firstLabel, editType, entityType) => {
+    editEntityAction: (editPayload, editType, entityType) => {
       const action = itemEditorActions.editEntityAction(
-        nodeId,
-        firstLabel,
+        editPayload,
         editType,
         entityType
       )
