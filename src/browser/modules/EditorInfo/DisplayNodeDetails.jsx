@@ -11,19 +11,8 @@ import classNames from 'classnames'
 import styles from '../DatabaseInfo/style_meta.css'
 import { chip, StyledKeyEditor, EditPropertiesInput } from './styled'
 import { StyledTable, StyledValue } from '../DatabaseInfo/styled'
-import styled from 'styled-components'
 import { BinIcon, EditIcon } from 'browser-components/icons/Icons'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
-
-const IconButton = styled.button`
-  margin-left: 4px;
-  border: 0;
-  background: white;
-  color: black;
-  &:focus {
-    outline: solid;
-  }
-`
 
 /**
  * Creates items to display in chip format
@@ -221,13 +210,86 @@ const DisplayNodeDetails = props => {
         editEntityAction={props.editEntityAction}
         entityType='node'
       />
+      <RelationshipSection
+        fromSelectedNode={props.fromSelectedNode}
+        toSelectedNode={props.toSelectedNode}
+        entityType={props.entityType}
+      />
     </React.Fragment>
   )
 }
 
 DisplayNodeDetails.propTypes = {
   node: PropTypes.object,
-  editEntityAction: PropTypes.func
+  editEntityAction: PropTypes.func,
+  entityType: PropTypes.string,
+  fromSelectedNode: PropTypes.array,
+  toSelectedNode: PropTypes.array
+}
+
+/**
+ * Method to show the relationship details for the selected node
+ * @param {array} selectedNodeRelationship array containing the relationship details
+ * @param {string} entityType entity type, either node or relationship
+ * @param {string} relationshipEndpoint relationship endpoint, either from or to
+ */
+const showRelationshipDetails = (
+  selectedNodeRelationship,
+  entityType,
+  relationshipEndpoint
+) => {
+  let relationShipArray = []
+  if (selectedNodeRelationship) {
+    relationShipArray = _.map(selectedNodeRelationship, (value, key) => {
+      return (
+        <div key={key}>
+          <StyledTable>
+            <tbody>
+              <tr>
+                <StyledKeyEditor>R{key + 1}:</StyledKeyEditor>
+                <StyledValue data-testid='user-details-username'>
+                  {relationshipEndpoint === 'from' && ' ----> '}
+                  {relationshipEndpoint === 'to' && ' <---- '}
+                  {value.end.identity.toInt()}
+                </StyledValue>
+              </tr>
+            </tbody>
+          </StyledTable>
+        </div>
+      )
+    })
+  }
+  if (!relationShipArray.length) {
+    relationShipArray.push(
+      <p
+      >{`There are no relationships ${relationshipEndpoint} this ${entityType}`}</p>
+    )
+  }
+  return relationShipArray
+}
+/**
+ * Relationship Section
+ */
+export const RelationshipSection = props => {
+  return (
+    <DrawerSection>
+      <DrawerSubHeader>Relationships</DrawerSubHeader>
+      <DrawerSubHeader>From Selected Node</DrawerSubHeader>
+      {showRelationshipDetails(
+        props.fromSelectedNode,
+        props.entityType,
+        'from'
+      )}
+      <DrawerSubHeader>To Selected Node</DrawerSubHeader>
+      {showRelationshipDetails(props.toSelectedNode, props.entityType, 'to')}
+    </DrawerSection>
+  )
+}
+
+RelationshipSection.propTypes = {
+  entityType: PropTypes.string,
+  fromSelectedNode: PropTypes.array,
+  toSelectedNode: PropTypes.array
 }
 
 export default DisplayNodeDetails
