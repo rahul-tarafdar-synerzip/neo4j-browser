@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   DrawerSection,
@@ -105,108 +105,101 @@ EntitySection.propTypes = {
  * Properties section
  * @param {*} props
  */
-export class PropertiesSection extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      properties: this.props.properties,
-      toggleRequested: false
-    }
-  }
-  componentDidUpdate (prevProps) {
-    // Typical usage (don't forget to compare props):
-    if (this.props !== prevProps) {
-      this.setState({
-        properties: this.props.properties,
-        toggleRequested: false
-      })
-    }
+
+export const PropertiesSection = props => {
+  const initState = {
+    properties: { ...props.properties }
   }
 
-  handleChange = (key, e) => {
-    let newState = _.cloneDeep(this.state)
-    this.setState({
+  const [state, setState] = useState(initState)
+
+  /**
+   * useEffect accepts a function that updates the state whenever the props change
+   * @param setState — Function that returns an updated state everytime props change
+   * @param deps —  Will activate when the props change
+   */
+  useEffect(
+    () => {
+      setState({ ...state, properties: { ...props.properties } })
+    },
+    [props.properties]
+  )
+
+  const handleChange = (key, e) => {
+    let newState = _.cloneDeep(state)
+    setState({
       ...newState,
       properties: {
         ...newState.properties,
         [key]: getStringValue(e.target.value)
-      },
-      toggleRequested: true
+      }
     })
   }
 
-  render () {
-    let content = []
-    if (this.state.properties) {
-      content = _.map(this.state.properties, (value, key) => {
-        return (
-          <div key={key}>
-            <StyledTable>
-              <tbody>
-                <tr>
-                  <StyledKeyEditor>{key}:</StyledKeyEditor>
-                  <StyledValue data-testid='user-details-username'>
-                    <EditPropertiesInput
-                      id='item'
-                      type='text'
-                      onChange={e => {
-                        this.handleChange(key, e)
-                      }}
-                      value={getStringValue(value)}
-                    />
-                    {console.log(this.state.properties[key])}
-                    <ConfirmationButton
-                      requested={this.state.toggleRequested}
-                      requestIcon={<EditIcon />}
-                      confirmIcon={<EditIcon deleteAction />}
-                      onConfirmed={() => this.props.removeClick(key, value)}
-                    />
-                    <ConfirmationButton
-                      requestIcon={<BinIcon />}
-                      confirmIcon={<BinIcon deleteAction />}
-                      onConfirmed={() => {
-                        this.props.editEntityAction(
-                          {
-                            [this.props.node
-                              ? 'nodeId'
-                              : 'relationshipId']: this.props.node
-                              ? this.props.node.identity.toInt()
-                              : this.props.relationship.identity.toInt(),
-                            [this.props.node ? 'label' : 'type']: this.props
-                              .node
-                              ? this.props.node.labels[0]
-                              : this.props.relationship.type,
-                            propertyKey: key
-                          },
-                          'delete',
-                          this.props.node
-                            ? 'nodeProperty'
-                            : 'relationshipProperty'
-                        )
-                      }}
-                    />
-                  </StyledValue>
-                </tr>
-              </tbody>
-            </StyledTable>
-          </div>
-        )
-      })
-    }
-    if (!content.length) {
-      content.push(
-        <p>{`There are no properties for this ${this.props.entityType}`}</p>
-      )
-    }
+  let content = []
+  if (state.properties) {
+    content = _.map(state.properties, (value, key) => {
+      return (
+        <div key={key}>
+          <StyledTable>
+            <tbody>
+              <tr>
+                <StyledKeyEditor>{key}:</StyledKeyEditor>
+                <StyledValue data-testid='user-details-username'>
+                  <EditPropertiesInput
+                    id='item'
+                    type='text'
+                    onChange={e => {
+                      handleChange(key, e)
+                    }}
+                    value={getStringValue(value)}
+                  />
 
-    return (
-      <DrawerSection>
-        <DrawerSubHeader>Properties</DrawerSubHeader>
-        {content}
-      </DrawerSection>
+                  <ConfirmationButton
+                    requestIcon={<EditIcon />}
+                    confirmIcon={<EditIcon deleteAction />}
+                    onConfirmed={() => this.props.removeClick(key, value)}
+                  />
+                  <ConfirmationButton
+                    requestIcon={<BinIcon />}
+                    confirmIcon={<BinIcon deleteAction />}
+                    onConfirmed={() => {
+                      props.editEntityAction(
+                        {
+                          [props.node ? 'nodeId' : 'relationshipId']: props.node
+                            ? props.node.identity.toInt()
+                            : props.relationship.identity.toInt(),
+                          [props.node ? 'label' : 'type']: props.node
+                            ? props.node.labels[0]
+                            : props.relationship.type,
+                          propertyKey: key
+                        },
+                        'delete',
+                        props.node ? 'nodeProperty' : 'relationshipProperty'
+                      )
+                    }}
+                  />
+                </StyledValue>
+              </tr>
+            </tbody>
+          </StyledTable>
+        </div>
+      )
+    })
+  }
+  if (!content.length) {
+    content.push(
+      <p>{`There are no properties for this ${props.entityType}`}</p>
     )
   }
+  return (
+    <DrawerSection>
+      <DrawerSubHeader>Properties</DrawerSubHeader>
+      {content}
+    </DrawerSection>
+  )
 }
+
 PropertiesSection.propTypes = {
   properties: PropTypes.object,
   editEntityAction: PropTypes.func
