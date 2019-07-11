@@ -51,7 +51,7 @@ export class ConfirmationButton extends Component {
   }
 
   render () {
-    if (this.state.requested || this.props.requested) {
+    if (this.state.requested) {
       return (
         <span>
           <IconButton

@@ -5,16 +5,16 @@ import {
   DrawerSubHeader,
   DrawerSectionBody
 } from 'browser-components/drawer/index'
-import { getStringValue } from './utils'
 import * as _ from 'lodash'
 import classNames from 'classnames'
 import styles from '../DatabaseInfo/style_meta.css'
-import { chip, StyledKeyEditor, EditPropertiesInput } from './styled'
-import { StyledTable, StyledValue } from '../DatabaseInfo/styled'
-import { BinIcon, EditIcon } from 'browser-components/icons/Icons'
+import { chip } from './styled'
+import { StyledTable } from '../DatabaseInfo/styled'
+import { BinIcon } from 'browser-components/icons/Icons'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
-
+import { DisplayProperties } from '../EditorInfo/DisplayProperties'
 import { ExpandRelationshipDetails } from './ExpandRelationshipDetails'
+
 /**
  * Creates items to display in chip format
  * @param {*} originalList Item list
@@ -88,101 +88,6 @@ export const EntitySection = props => {
 }
 EntitySection.propTypes = {
   node: PropTypes.object,
-  editEntityAction: PropTypes.func
-}
-
-/**
- * Component to display the properties of selected node
- * @param {*} props
- */
-
-const DisplayProperties = props => {
-  let { displayPropertiesStateKey, value } = props
-  const initState = {
-    properties: { [displayPropertiesStateKey]: value },
-    requested: false
-  }
-
-  const [propertiesState, updatePropertiesState] = useState(initState)
-
-  /**
-   * useEffect accepts a function that updates the state whenever the props change
-   * @param updatePropertiesState — Function that returns an updated state everytime props change
-   * @param deps —  Will activate when the props change
-   */
-  useEffect(
-    () => {
-      updatePropertiesState({
-        properties: { [displayPropertiesStateKey]: value },
-        requested: false
-      })
-    },
-    [value]
-  )
-
-  const handleChange = (displayPropertiesStateKey, e) => {
-    let newState = _.cloneDeep(propertiesState)
-    updatePropertiesState({
-      ...newState,
-      properties: {
-        ...newState.properties,
-        [displayPropertiesStateKey]: getStringValue(e.target.value)
-      },
-      requested: true
-    })
-  }
-  return (
-    <div>
-      <StyledKeyEditor>{displayPropertiesStateKey}:</StyledKeyEditor>
-      <StyledValue data-testid='user-details-username'>
-        <EditPropertiesInput
-          id='item'
-          type='text'
-          onChange={e => {
-            handleChange(displayPropertiesStateKey, e)
-          }}
-          value={getStringValue(
-            propertiesState.properties[displayPropertiesStateKey]
-          )}
-        />
-
-        <ConfirmationButton
-          requested={propertiesState.requested}
-          requestIcon={<EditIcon />}
-          confirmIcon={<EditIcon />}
-          onConfirmed={() =>
-            this.props.removeClick(displayPropertiesStateKey, value)
-          }
-        />
-        <ConfirmationButton
-          requestIcon={<BinIcon />}
-          confirmIcon={<BinIcon deleteAction />}
-          onConfirmed={() => {
-            props.editEntityAction(
-              {
-                [props.node ? 'nodeId' : 'relationshipId']: props.node
-                  ? props.node.identity.toInt()
-                  : props.relationship.identity.toInt(),
-                [props.node ? 'label' : 'type']: props.node
-                  ? props.node.labels[0]
-                  : props.relationship.type,
-                propertyKey: displayPropertiesStateKey
-              },
-              'delete',
-              props.node ? 'nodeProperty' : 'relationshipProperty'
-            )
-          }}
-        />
-      </StyledValue>
-    </div>
-  )
-}
-
-DisplayProperties.propTypes = {
-  displayPropertiesStateKey: PropTypes.string,
-  value: PropTypes.any,
-  node: PropTypes.object,
-  relationship: PropTypes.object,
   editEntityAction: PropTypes.func
 }
 
