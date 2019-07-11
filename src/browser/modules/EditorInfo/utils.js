@@ -34,5 +34,9 @@ export const getStringValue = value => {
     return value ? 'true' : 'false'
   }
 
+  if (Array.isArray(value)) {
+    return value.join(' , ')
+  }
+
   return ''
 }
