@@ -100,14 +100,17 @@ EntitySection.propTypes = {
   editEntityAction: PropTypes.func
 }
 
-/**
- * Properties section
- * @param {*} props
- */
-
-export const PropertiesSection = props => {
+const OpenIconOnChange = props => {
+  let { key1, value } = props
+  {
+    console.log(key1, '<---key')
+  }
+  {
+    console.log(value, '<---value')
+  }
   const initState = {
-    properties: { ...props.properties }
+    properties: { [key1]: value },
+    requested: false
   }
 
   const [propertiesState, updatePropertiesState] = useState(initState)
@@ -120,23 +123,111 @@ export const PropertiesSection = props => {
   useEffect(
     () => {
       updatePropertiesState({
-        ...propertiesState,
-        properties: { ...props.properties }
+        properties: { [key1]: value },
+        requested: false
       })
     },
-    [props.properties]
+    [value]
   )
+  console.log(propertiesState)
 
-  const handleChange = (key, e) => {
+  const handleChange = (key1, e) => {
     let newState = _.cloneDeep(propertiesState)
     updatePropertiesState({
       ...newState,
       properties: {
         ...newState.properties,
-        [key]: getStringValue(e.target.value)
-      }
+        [key1]: getStringValue(e.target.value)
+      },
+      requested: true
     })
   }
+  return (
+    <div>
+      <StyledKeyEditor>{key1}:</StyledKeyEditor>
+      <StyledValue data-testid='user-details-username'>
+        <EditPropertiesInput
+          id='item'
+          type='text'
+          onChange={e => {
+            handleChange(key1, e)
+          }}
+          value={getStringValue(propertiesState.properties[key1])}
+        />
+
+        <ConfirmationButton
+          requested={propertiesState.requested}
+          requestIcon={<EditIcon />}
+          confirmIcon={<EditIcon />}
+          onConfirmed={() => this.props.removeClick(key1, value)}
+        />
+        <ConfirmationButton
+          requestIcon={<BinIcon />}
+          confirmIcon={<BinIcon deleteAction />}
+          onConfirmed={() => {
+            props.editEntityAction(
+              {
+                [props.node ? 'nodeId' : 'relationshipId']: props.node
+                  ? props.node.identity.toInt()
+                  : props.relationship.identity.toInt(),
+                [props.node ? 'label' : 'type']: props.node
+                  ? props.node.labels[0]
+                  : props.relationship.type,
+                propertyKey: key1
+              },
+              'delete',
+              props.node ? 'nodeProperty' : 'relationshipProperty'
+            )
+          }}
+        />
+      </StyledValue>
+    </div>
+  )
+}
+
+/**
+ * Properties section
+ * @param {*} props
+ */
+
+export const PropertiesSection = props => {
+  const initState = {
+    properties: { ...props.properties },
+    requested: false
+  }
+
+  const [propertiesState, updatePropertiesState] = useState(initState)
+  // console.log(propertiesState);
+
+  /**
+   * useEffect accepts a function that updates the state whenever the props change
+   * @param updatePropertiesState — Function that returns an updated state everytime props change
+   * @param deps —  Will activate when the props change
+   */
+  useEffect(
+    () => {
+      updatePropertiesState({
+        ...propertiesState,
+        properties: { ...props.properties },
+        requested: false
+      })
+    },
+    [props.properties]
+  )
+
+  console.log(propertiesState)
+  // const handleChange = (key, e) => {
+  //   let newState = _.cloneDeep(propertiesState);
+  //   updatePropertiesState({
+  //     ...newState,
+  //     properties: {
+  //       ...newState.properties,
+  //       [key]: getStringValue(e.target.value)
+  //     },
+  //     requested: true
+  //   });
+  //   console.log(propertiesState);
+  // };
 
   let content = []
   if (propertiesState.properties) {
@@ -146,42 +237,9 @@ export const PropertiesSection = props => {
           <StyledTable>
             <tbody>
               <tr>
-                <StyledKeyEditor>{key}:</StyledKeyEditor>
-                <StyledValue data-testid='user-details-username'>
-                  <EditPropertiesInput
-                    id='item'
-                    type='text'
-                    onChange={e => {
-                      handleChange(key, e)
-                    }}
-                    value={getStringValue(value)}
-                  />
-
-                  <ConfirmationButton
-                    requestIcon={<EditIcon />}
-                    confirmIcon={<EditIcon deleteAction />}
-                    onConfirmed={() => this.props.removeClick(key, value)}
-                  />
-                  <ConfirmationButton
-                    requestIcon={<BinIcon />}
-                    confirmIcon={<BinIcon deleteAction />}
-                    onConfirmed={() => {
-                      props.editEntityAction(
-                        {
-                          [props.node ? 'nodeId' : 'relationshipId']: props.node
-                            ? props.node.identity.toInt()
-                            : props.relationship.identity.toInt(),
-                          [props.node ? 'label' : 'type']: props.node
-                            ? props.node.labels[0]
-                            : props.relationship.type,
-                          propertyKey: key
-                        },
-                        'delete',
-                        props.node ? 'nodeProperty' : 'relationshipProperty'
-                      )
-                    }}
-                  />
-                </StyledValue>
+                {console.log(key, '<---key')}
+                {console.log(value, '<---value')}
+                <OpenIconOnChange {...props} value={value} key1={key} />
               </tr>
             </tbody>
           </StyledTable>
