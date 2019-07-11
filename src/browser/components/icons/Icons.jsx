@@ -251,7 +251,7 @@ export const BinIcon = props => (
   />
 )
 
-export const TickMarkIcon = props => (
+export const TickMarkIcon = () => (
   <IconContainer icon={tick} width={12} style={{ fill: '#4cd950' }} />
 )
 

@@ -169,15 +169,6 @@ export const NewFolderButton = props => {
   )
 }
 
-export const NewNodeButton = props => {
-  return (
-    <NewFolderStyledButton onClick={props.onClick}>
-      <PlusIcon />
-      New Node
-    </NewFolderStyledButton>
-  )
-}
-
 export const DeleteFavButton = props => {
   const rightIcon =
     props.removeClick && !props.isStatic ? (
