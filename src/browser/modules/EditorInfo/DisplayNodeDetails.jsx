@@ -100,16 +100,15 @@ EntitySection.propTypes = {
   editEntityAction: PropTypes.func
 }
 
-const OpenIconOnChange = props => {
-  let { key1, value } = props
-  {
-    console.log(key1, '<---key')
-  }
-  {
-    console.log(value, '<---value')
-  }
+/**
+ * Component to display the properties of selected node
+ * @param {*} props
+ */
+
+const DisplayProperties = props => {
+  let { displayPropertiesStateKey, value } = props
   const initState = {
-    properties: { [key1]: value },
+    properties: { [displayPropertiesStateKey]: value },
     requested: false
   }
 
@@ -123,43 +122,46 @@ const OpenIconOnChange = props => {
   useEffect(
     () => {
       updatePropertiesState({
-        properties: { [key1]: value },
+        properties: { [displayPropertiesStateKey]: value },
         requested: false
       })
     },
     [value]
   )
-  console.log(propertiesState)
 
-  const handleChange = (key1, e) => {
+  const handleChange = (displayPropertiesStateKey, e) => {
     let newState = _.cloneDeep(propertiesState)
     updatePropertiesState({
       ...newState,
       properties: {
         ...newState.properties,
-        [key1]: getStringValue(e.target.value)
+        [displayPropertiesStateKey]: getStringValue(e.target.value)
       },
       requested: true
     })
   }
   return (
     <div>
-      <StyledKeyEditor>{key1}:</StyledKeyEditor>
+      <StyledKeyEditor>{displayPropertiesStateKey}:</StyledKeyEditor>
       <StyledValue data-testid='user-details-username'>
         <EditPropertiesInput
           id='item'
           type='text'
           onChange={e => {
-            handleChange(key1, e)
+            handleChange(displayPropertiesStateKey, e)
           }}
-          value={getStringValue(propertiesState.properties[key1])}
+          value={getStringValue(
+            propertiesState.properties[displayPropertiesStateKey]
+          )}
         />
 
         <ConfirmationButton
           requested={propertiesState.requested}
           requestIcon={<EditIcon />}
           confirmIcon={<EditIcon />}
-          onConfirmed={() => this.props.removeClick(key1, value)}
+          onConfirmed={() =>
+            this.props.removeClick(displayPropertiesStateKey, value)
+          }
         />
         <ConfirmationButton
           requestIcon={<BinIcon />}
@@ -173,7 +175,7 @@ const OpenIconOnChange = props => {
                 [props.node ? 'label' : 'type']: props.node
                   ? props.node.labels[0]
                   : props.relationship.type,
-                propertyKey: key1
+                propertyKey: displayPropertiesStateKey
               },
               'delete',
               props.node ? 'nodeProperty' : 'relationshipProperty'
@@ -185,6 +187,14 @@ const OpenIconOnChange = props => {
   )
 }
 
+DisplayProperties.propTypes = {
+  displayPropertiesStateKey: PropTypes.string,
+  value: PropTypes.any,
+  node: PropTypes.object,
+  relationship: PropTypes.object,
+  editEntityAction: PropTypes.func
+}
+
 /**
  * Properties section
  * @param {*} props
@@ -192,12 +202,10 @@ const OpenIconOnChange = props => {
 
 export const PropertiesSection = props => {
   const initState = {
-    properties: { ...props.properties },
-    requested: false
+    properties: { ...props.properties }
   }
 
   const [propertiesState, updatePropertiesState] = useState(initState)
-  // console.log(propertiesState);
 
   /**
    * useEffect accepts a function that updates the state whenever the props change
@@ -208,26 +216,11 @@ export const PropertiesSection = props => {
     () => {
       updatePropertiesState({
         ...propertiesState,
-        properties: { ...props.properties },
-        requested: false
+        properties: { ...props.properties }
       })
     },
     [props.properties]
   )
-
-  console.log(propertiesState)
-  // const handleChange = (key, e) => {
-  //   let newState = _.cloneDeep(propertiesState);
-  //   updatePropertiesState({
-  //     ...newState,
-  //     properties: {
-  //       ...newState.properties,
-  //       [key]: getStringValue(e.target.value)
-  //     },
-  //     requested: true
-  //   });
-  //   console.log(propertiesState);
-  // };
 
   let content = []
   if (propertiesState.properties) {
@@ -237,9 +230,11 @@ export const PropertiesSection = props => {
           <StyledTable>
             <tbody>
               <tr>
-                {console.log(key, '<---key')}
-                {console.log(value, '<---value')}
-                <OpenIconOnChange {...props} value={value} key1={key} />
+                <DisplayProperties
+                  {...props}
+                  value={value}
+                  displayPropertiesStateKey={key}
+                />
               </tr>
             </tbody>
           </StyledTable>
