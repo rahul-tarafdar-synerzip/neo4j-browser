@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { withBus } from 'react-suber'
+import { connect } from 'react-redux'
 import {
   DrawerSection,
   DrawerSubHeader,
@@ -15,6 +17,9 @@ import { BinIcon, EditIcon } from 'browser-components/icons/Icons'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 
 import { ExpandRelationshipDetails } from './ExpandRelationshipDetails'
+// import { PlusIcon } from "browser-components/icons/Icons";
+import AddProperty from './AddProperty'
+import * as itemEditorActions from 'shared/modules/itemEditor/itemEditorDuck'
 /**
  * Creates items to display in chip format
  * @param {*} originalList Item list
@@ -187,7 +192,16 @@ export const PropertiesSection = props => {
   }
   return (
     <DrawerSection>
-      <DrawerSubHeader>Properties</DrawerSubHeader>
+      <DrawerSubHeader>
+        Properties
+        <AddProperty
+          editEntityAction={props.editEntityAction}
+          labels={props.node ? props.node.labels : null}
+          properties={
+            props.node ? props.node.properties : props.relationship.properties
+          }
+        />
+      </DrawerSubHeader>
       {content}
     </DrawerSection>
   )
