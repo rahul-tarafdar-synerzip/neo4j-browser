@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { withBus } from 'react-suber'
-import { connect } from 'react-redux'
 import {
   DrawerSection,
   DrawerSubHeader,
@@ -16,7 +14,6 @@ import { BinIcon } from 'browser-components/icons/Icons'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 import { DisplayProperties } from '../EditorInfo/DisplayProperties'
 import { ExpandRelationshipDetails } from './ExpandRelationshipDetails'
-// import { PlusIcon } from "browser-components/icons/Icons";
 import AddProperty from './AddProperty'
 /**
  * Creates items to display in chip format
@@ -152,9 +149,10 @@ export const PropertiesSection = props => {
         Properties
         <AddProperty
           editEntityAction={props.editEntityAction}
-          labels={props.node ? props.node.labels : null}
-          properties={
-            props.node ? props.node.properties : props.relationship.properties
+          id={
+            props.node
+              ? props.node.identity.toInt()
+              : props.relationship.identity.toInt()
           }
         />
       </DrawerSubHeader>
