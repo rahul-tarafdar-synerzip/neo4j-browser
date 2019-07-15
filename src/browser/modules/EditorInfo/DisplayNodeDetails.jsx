@@ -13,10 +13,9 @@ import { BinIcon } from 'browser-components/icons/Icons'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 import { DisplayProperties } from '../EditorInfo/DisplayProperties'
 import { ExpandRelationshipDetails } from './ExpandRelationshipDetails'
-
 import { EditPropertiesInput } from './styled'
 import { DisplayLabels } from './DisplayLabels'
-
+import AddProperty from './AddProperty'
 /**
  * Creates items to display in chip format
  * @param {*} originalList Item list
@@ -165,7 +164,17 @@ export const PropertiesSection = props => {
   }
   return (
     <DrawerSection>
-      <DrawerSubHeader>Properties</DrawerSubHeader>
+      <DrawerSubHeader>
+        Properties
+        <AddProperty
+          editEntityAction={props.editEntityAction}
+          id={
+            props.node
+              ? props.node.identity.toInt()
+              : props.relationship.identity.toInt()
+          }
+        />
+      </DrawerSubHeader>
       {content}
     </DrawerSection>
   )
