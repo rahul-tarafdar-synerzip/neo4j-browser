@@ -12,29 +12,29 @@ import PropTypes from 'prop-types'
  * @param {*} props
  */
 
-export const DisplayLabels = props => {
-  let { labels, labelsKey } = props
+export const DisplayLabel = props => {
+  let { label, labelKey } = props
 
   const initialState = {
-    labelNames: { [labelsKey]: labels },
+    labelName: { [labelKey]: label },
     requested: false
   }
-  const [labelsState, setToInitialState] = useState(initialState)
+  const [labelState, setToInitialState] = useState(initialState)
 
   useEffect(() => {
     setToInitialState({
-      labelNames: { [labelsKey]: labels },
+      labelName: { [labelKey]: label },
       requested: false
     })
-  }, [labels])
+  }, [label])
 
-  const handleChange = (event, labelsKey) => {
-    let newState = _.cloneDeep(labelsState)
+  const handleChange = (event, labelKey) => {
+    let newState = _.cloneDeep(labelState)
     setToInitialState({
       ...newState,
-      labelNames: {
-        ...newState.labelNames,
-        [labelsKey]: getStringValue(event.target.value)
+      labelName: {
+        ...newState.labelName,
+        [labelKey]: getStringValue(event.target.value)
       },
       requested: true
     })
@@ -42,23 +42,23 @@ export const DisplayLabels = props => {
 
   const onCanceled = () => {
     setToInitialState({
-      labelNames: { [labelsKey]: labels },
+      labelName: { [labelKey]: label },
       requested: false
     })
   }
 
   return (
     <React.Fragment>
-      <StyledKeyEditor>{labelsKey}:</StyledKeyEditor>
+      <StyledKeyEditor>{labelKey}:</StyledKeyEditor>
       <StyledValue data-testid='user-details-username'>
         <EditPropertiesInput
           type='text'
-          value={getStringValue(labelsState.labelNames[labelsKey])}
+          value={getStringValue(labelState.labelName[labelKey])}
           onChange={event => {
-            handleChange(event, labelsKey)
+            handleChange(event, labelKey)
           }}
         />
-        {labelsState.requested ? (
+        {labelState.requested ? (
           <PartialConfirmationButtons
             icon={<TickMarkIcon />}
             onCanceled={onCanceled}
@@ -74,7 +74,7 @@ export const DisplayLabels = props => {
   )
 }
 
-DisplayLabels.propTypes = {
-  labelsKey: PropTypes.string,
-  labels: PropTypes.string
+DisplayLabel.propTypes = {
+  labelKey: PropTypes.string,
+  label: PropTypes.string
 }

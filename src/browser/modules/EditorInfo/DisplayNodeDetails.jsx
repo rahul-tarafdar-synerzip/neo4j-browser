@@ -14,7 +14,7 @@ import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButto
 import { DisplayProperties } from '../EditorInfo/DisplayProperties'
 import { ExpandRelationshipDetails } from './ExpandRelationshipDetails'
 import { EditPropertiesInput } from './styled'
-import { DisplayLabels } from './DisplayLabels'
+import { DisplayLabel } from './DisplayLabel'
 import AddProperty from './AddProperty'
 /**
  * Creates items to display in chip format
@@ -54,17 +54,13 @@ const LabelSection = props => {
           })}
         >
           <StyledValue data-testid='user-details-username'>
-            {labels.map((labels, labelsKey) => {
+            {labels.map((label, labelKey) => {
               return (
-                <div key={labelsKey}>
+                <div key={labelKey}>
                   <StyledTable>
                     <tbody>
                       <tr>
-                        <DisplayLabels
-                          {...props}
-                          labels={labels}
-                          labelsKey={labelsKey}
-                        />
+                        <DisplayLabel label={label} labelKey={labelKey} />
                       </tr>
                     </tbody>
                   </StyledTable>
