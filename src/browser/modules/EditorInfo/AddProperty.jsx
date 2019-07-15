@@ -26,6 +26,37 @@ const IconButton = styled.button`
     outline: none;
   }
 `
+function DropDownContents (props) {
+  return (
+    <FormControl
+      style={{
+        marginTop: 16,
+        marginBottom: 16,
+        minWidth: 120
+      }}
+      variant='outlined'
+    >
+      <Select
+        name='datatype'
+        style={{
+          background: '#fff',
+          fontSize: '14px',
+          textAlign: '-webkit-center',
+          height: '34px',
+          color: '#555',
+          borderTop: '1px solid #ccc',
+          borderRadius: '4px'
+        }}
+        value={props.myState.newProperties.datatype}
+        onChange={e => {
+          props.handleChange(e.target.name, e.target.value)
+        }}
+      >
+        <MenuItem value='string'>String</MenuItem>
+      </Select>
+    </FormControl>
+  )
+}
 
 function AddProperty (props) {
   const [textField, handleToggle] = useState(false)
@@ -44,37 +75,6 @@ function AddProperty (props) {
         [key1]: getStringValue(value)
       }
     })
-  }
-  function DropDownContents (props) {
-    return (
-      <FormControl
-        style={{
-          marginTop: 16,
-          marginBottom: 16,
-          minWidth: 120
-        }}
-        variant='outlined'
-      >
-        <Select
-          name='datatype'
-          style={{
-            background: '#fff',
-            fontSize: '14px',
-            textAlign: '-webkit-center',
-            height: '34px',
-            color: '#555',
-            borderTop: '1px solid #ccc',
-            borderRadius: '4px'
-          }}
-          value={myState.newProperties.datatype}
-          onChange={e => {
-            props.handleChange(e.target.name, e.target.value)
-          }}
-        >
-          <MenuItem value='string'>String</MenuItem>
-        </Select>
-      </FormControl>
-    )
   }
 
   return (
@@ -102,7 +102,10 @@ function AddProperty (props) {
               <tr>
                 <StyledKey> Data Type:</StyledKey>
                 <StyledValue>
-                  <DropDownContents handleChange={handleChange} />
+                  <DropDownContents
+                    myState={myState}
+                    handleChange={handleChange}
+                  />
                 </StyledValue>
               </tr>
               <StyledKey>Value :</StyledKey>
