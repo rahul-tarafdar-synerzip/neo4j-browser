@@ -6,7 +6,6 @@ import {
   DrawerSectionBody
 } from 'browser-components/drawer/index'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
-import { StyledRelationship } from '../DatabaseInfo/styled'
 import {
   BinIcon,
   ExpandMenuIcon,
@@ -23,6 +22,7 @@ import {
 } from '../Sidebar/styled'
 import classNames from 'classnames'
 import styles from '../DatabaseInfo/style_meta.css'
+import DisplayRelationshipType from './DisplayRelationshipType'
 
 /**
  * Component to Expand Relationship Details
@@ -30,6 +30,7 @@ import styles from '../DatabaseInfo/style_meta.css'
  */
 export const ExpandRelationshipDetails = props => {
   const [active, setFlag] = useState(false)
+
   return (
     <div>
       <StyledList>
@@ -79,9 +80,12 @@ export const ExpandRelationshipDetails = props => {
           {active === true && (
             <div style={{ marginLeft: 30 }}>
               <DrawerSubHeader>Relationship Type</DrawerSubHeader>
-              <StyledRelationship>
-                {props.value.segments[0].relationship.type}
-              </StyledRelationship>
+
+              <DisplayRelationshipType
+                {...props}
+                relationshipType={props.value.segments[0].relationship.type}
+                relationshipId={props.value.segments[0].relationship.identity.toInt()}
+              />
 
               {props.value.segments.map((item, index) => (
                 <PropertiesSection
