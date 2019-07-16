@@ -86,6 +86,28 @@ export const handleFetchDataEpic = (action$, store) =>
   })
 
 /**
+ * This function returns the cypher compatible value of the received value.
+ */
+function getCypherCompatibleValue (action) {
+  let convertedValue = ''
+  switch (action.editPayload.dataType) {
+    case 'string':
+      convertedValue = `'${action.editPayload.value}'`
+      break
+    case 'number':
+      convertedValue = `toInt('${action.editPayload.value.toString()}')`
+      break
+    case 'boolean':
+      convertedValue = `toBoolean('${action.editPayload.value.toString()}')`
+      break
+    default:
+      convertedValue = `'${action.editPayload.value}'`
+      break
+  }
+  return convertedValue
+}
+
+/**
  * Epic to handle edit operation (create, update, delete)
  * This will handle all three edit types viz. create, update, delete (may be by means of switch)
  * every sub operation inturn may handle the case for node and reletionship
@@ -96,10 +118,11 @@ export const handleEditEntityEpic = (action$, store) =>
     let cmd
     switch (action.editType) {
       case 'create':
+        getCypherCompatibleValue(action)
         if (action.entityType === 'nodeProperty') {
           cmd = `MATCH (a)
         WHERE ID(a) = ${action.editPayload.id}
-        SET a.${action.editPayload.key} = '${action.editPayload.value}'
+        SET a.${action.editPayload.key} = ${getCypherCompatibleValue(action)}
         RETURN a, ((a)-->()) , ((a)<--())`
         }
         if (action.entityType === 'node') {

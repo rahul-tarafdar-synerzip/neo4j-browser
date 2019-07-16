@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { EditPropertiesInput } from './styled'
 import { getStringValue } from './utils'
+import PartialConfirmationButtons from 'browser-components/buttons/PartialConfirmationButtons'
 
 /**
  * Component to display the relationship type
@@ -11,23 +12,44 @@ import { getStringValue } from './utils'
 function DisplayRelationshipType (props) {
   const initState = {
     relationshipTypeObj: {
-      'relationshipType': props.relationshipType
+      relationshipType: props.relationshipType,
+      relationshipId: props.relationshipId,
+      showButtons: false
     }
   }
+
   const [relationshipTypeState, setrelationshipType] = useState(initState)
 
-  useEffect(
-    () => {
-      setrelationshipType({
-        relationshipTypeObj: { 'relationshipType': props.relationshipType }
-      })
-    },
-    [props.relationshipType]
-  )
+  useEffect(() => {
+    setrelationshipType({
+      relationshipTypeObj: {
+        relationshipType: props.relationshipType,
+        relationshipId: props.relationshipId,
+        showButtons: false
+      }
+    })
+  }, [props.relationshipType])
 
   const handleChange = e => {
+    let newState = _.cloneDeep(relationshipTypeState)
     setrelationshipType({
-      relationshipTypeObj: { 'relationshipType': e.target.value }
+      ...newState,
+      relationshipTypeObj: {
+        ...newState.relationshipTypeObj,
+        relationshipType: e.target.value,
+        relationshipId: props.relationshipId,
+        showButtons: true
+      }
+    })
+  }
+
+  const onCanceled = () => {
+    setrelationshipType({
+      relationshipTypeObj: {
+        relationshipType: props.relationshipType,
+        relationshipId: props.relationshipId,
+        showButtons: false
+      }
     })
   }
 
@@ -43,6 +65,9 @@ function DisplayRelationshipType (props) {
           relationshipTypeState.relationshipTypeObj.relationshipType
         )}
       />
+      {relationshipTypeState.relationshipTypeObj.showButtons ? (
+        <PartialConfirmationButtons onCanceled={onCanceled} />
+      ) : null}
     </div>
   )
 }
