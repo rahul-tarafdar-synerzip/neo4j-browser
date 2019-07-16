@@ -60,7 +60,11 @@ const LabelSection = props => {
                   <StyledTable>
                     <tbody>
                       <tr>
-                        <DisplayLabel label={label} labelKey={labelKey} />
+                        <DisplayLabel
+                          {...props}
+                          label={label}
+                          labelKey={labelKey}
+                        />
                       </tr>
                     </tbody>
                   </StyledTable>

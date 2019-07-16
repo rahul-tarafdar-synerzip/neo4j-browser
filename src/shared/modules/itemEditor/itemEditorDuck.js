@@ -107,6 +107,10 @@ export const handleEditEntityEpic = (action$, store) =>
         }
         break
       case 'update':
+        cmd = `MATCH (a) WHERE id(a)=${action.editPayload.nodeId} 
+        REMOVE a:${action.editPayload.previousLabelValue}
+        SET a:${action.editPayload.labelName}
+        RETURN a, ((a)-->()), ((a)<--())`
         break
       case 'delete':
         if (action.entityType === 'node') {
