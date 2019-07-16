@@ -13,7 +13,6 @@ function DisplayRelationshipType (props) {
   const initState = {
     relationshipTypeObj: {
       relationshipType: props.relationshipType,
-      relationshipId: props.relationshipId,
       showButtons: false
     }
   }
@@ -25,7 +24,6 @@ function DisplayRelationshipType (props) {
       setrelationshipType({
         relationshipTypeObj: {
           relationshipType: props.relationshipType,
-          relationshipId: props.relationshipId,
           showButtons: false
         }
       })
@@ -34,23 +32,43 @@ function DisplayRelationshipType (props) {
   )
 
   const handleChange = e => {
+    let selectedNode
+    if (
+      props.selectedNodeId ===
+      props.value.segments[0].relationship.start.toInt()
+    ) {
+      selectedNode = 'start'
+    } else {
+      selectedNode = 'end'
+    }
     let newState = _.cloneDeep(relationshipTypeState)
     setrelationshipType({
       ...newState,
       relationshipTypeObj: {
         ...newState.relationshipTypeObj,
         relationshipType: e.target.value,
-        relationshipId: props.relationshipId,
-        showButtons: true
+        showButtons: true,
+        selectedNode: selectedNode
       }
     })
+  }
+
+  const onConfirmed = () => {
+    props.editEntityAction(
+      {
+        id: props.relationshipId,
+        value: relationshipTypeState.relationshipTypeObj.relationshipType,
+        selectedNode: relationshipTypeState.relationshipTypeObj.selectedNode
+      },
+      'update',
+      'relationshipType'
+    )
   }
 
   const onCanceled = () => {
     setrelationshipType({
       relationshipTypeObj: {
         relationshipType: props.relationshipType,
-        relationshipId: props.relationshipId,
         showButtons: false
       }
     })
@@ -69,7 +87,10 @@ function DisplayRelationshipType (props) {
         )}
       />
       {relationshipTypeState.relationshipTypeObj.showButtons ? (
-        <PartialConfirmationButtons onCanceled={onCanceled} />
+        <PartialConfirmationButtons
+          onConfirmed={onConfirmed}
+          onCanceled={onCanceled}
+        />
       ) : null}
     </div>
   )
