@@ -75,13 +75,26 @@ function AddProperty (props) {
 
   const handleChange = (key1, value) => {
     let newState = _.cloneDeep(myState)
-    updatePropertiesState({
-      ...newState,
-      newProperties: {
-        ...newState.newProperties,
-        [key1]: value
-      }
-    })
+    myState.newProperties.datatype === 'date'
+      ? updatePropertiesState({
+        ...newState,
+        newProperties: {
+          ...newState.newProperties,
+          [key1]:
+              value.getUTCFullYear() +
+              '-' +
+              (1 + value.getUTCMonth()) +
+              '-' +
+              value.getUTCDate()
+        }
+      })
+      : updatePropertiesState({
+        ...newState,
+        newProperties: {
+          ...newState.newProperties,
+          [key1]: value
+        }
+      })
   }
 
   let valueInput = null
@@ -186,14 +199,7 @@ function AddProperty (props) {
                     style={{ float: 'right' }}
                     id='date'
                     onDayClick={day => {
-                      handleChange(
-                        'propValue',
-                        day.getUTCFullYear() +
-                          '-' +
-                          (1 + day.getUTCMonth()) +
-                          '-' +
-                          day.getUTCDate()
-                      )
+                      handleChange('propValue', new Date(day))
                     }}
                   />
                 ) : null}
