@@ -75,26 +75,13 @@ function AddProperty (props) {
 
   const handleChange = (key1, value) => {
     let newState = _.cloneDeep(myState)
-    myState.newProperties.datatype === 'date'
-      ? updatePropertiesState({
-        ...newState,
-        newProperties: {
-          ...newState.newProperties,
-          [key1]:
-              value.getUTCFullYear() +
-              '-' +
-              (1 + value.getUTCMonth()) +
-              '-' +
-              value.getUTCDate()
-        }
-      })
-      : updatePropertiesState({
-        ...newState,
-        newProperties: {
-          ...newState.newProperties,
-          [key1]: value
-        }
-      })
+    updatePropertiesState({
+      ...newState,
+      newProperties: {
+        ...newState.newProperties,
+        [key1]: value
+      }
+    })
   }
 
   let valueInput = null
@@ -199,7 +186,10 @@ function AddProperty (props) {
                     style={{ float: 'right' }}
                     id='date'
                     onDayClick={day => {
-                      handleChange('propValue', new Date(day))
+                      handleChange(
+                        'propValue',
+                        neo4j.types.Date.fromStandardDate(day)
+                      )
                     }}
                   />
                 ) : null}
