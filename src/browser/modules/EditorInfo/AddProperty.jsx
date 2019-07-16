@@ -10,13 +10,13 @@ import {
   DrawerSection,
   DrawerSectionBody
 } from 'browser-components/drawer/index'
-import { TextInput } from 'browser-components/Form'
+import { TextInput, RadioSelector } from 'browser-components/Form'
 import styled from 'styled-components'
-import { getStringValue } from './utils'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl'
 import PartialConfirmationButtons from 'browser-components/buttons/PartialConfirmationButtons'
+import { v1 as neo4j } from 'neo4j-driver'
 
 const IconButton = styled.button`
   margin-left: 4px;
@@ -53,6 +53,8 @@ function DropDownContents (props) {
         }}
       >
         <MenuItem value='string'>String</MenuItem>
+        <MenuItem value='number'>Number</MenuItem>
+        <MenuItem value='boolean'>Boolean</MenuItem>
       </Select>
     </FormControl>
   )
@@ -72,9 +74,48 @@ function AddProperty (props) {
       ...newState,
       newProperties: {
         ...newState.newProperties,
-        [key1]: getStringValue(value)
+        [key1]: value
       }
     })
+  }
+
+  let valueInput = null
+  const options = ['true', 'false']
+  switch (myState.newProperties.datatype) {
+    case 'string':
+      valueInput = (
+        <TextInput
+          id='propValue'
+          onChange={e => {
+            handleChange(e.target.id, e.target.value)
+          }}
+          style={{ width: '120px' }}
+        />
+      )
+      break
+    case 'number':
+      valueInput = (
+        <TextInput
+          id='propValue'
+          type='number'
+          onChange={e => {
+            handleChange(e.target.id, neo4j.int(e.target.value))
+          }}
+          style={{ width: '120px' }}
+        />
+      )
+      break
+    case 'boolean':
+      valueInput = (
+        <RadioSelector
+          options={options}
+          onChange={e => {
+            handleChange('propValue', e.target.value)
+          }}
+          selectedValue={myState.newProperties.propValue}
+        />
+      )
+      break
   }
 
   return (
@@ -109,15 +150,7 @@ function AddProperty (props) {
                 </StyledValue>
               </tr>
               <StyledKey>Value :</StyledKey>
-              <StyledValue>
-                <TextInput
-                  id='propValue'
-                  onChange={e => {
-                    handleChange(e.target.id, e.target.value)
-                  }}
-                  style={{ width: '120px' }}
-                />
-              </StyledValue>
+              <StyledValue>{valueInput}</StyledValue>
               <PartialConfirmationButtons
                 cancelIcon={
                   <IconButton onClick={() => handleToggle(textField)}>
@@ -134,7 +167,8 @@ function AddProperty (props) {
                     {
                       id: props.id,
                       key: myState.newProperties.key,
-                      value: myState.newProperties.propValue
+                      value: myState.newProperties.propValue,
+                      dataType: myState.newProperties.datatype
                     },
                     'create',
                     'nodeProperty'

@@ -4,7 +4,7 @@ import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButto
 import PartialConfirmationButtons from 'browser-components/buttons/PartialConfirmationButtons'
 import { getStringValue } from './utils'
 import { StyledValue } from '../DatabaseInfo/styled'
-import { StyledKeyEditor, EditPropertiesInput } from './styled'
+import { EditPropertiesInput } from './styled'
 import PropTypes from 'prop-types'
 
 /**
@@ -13,7 +13,9 @@ import PropTypes from 'prop-types'
  */
 
 export const DisplayLabel = props => {
-  let { label, labelKey } = props
+  let { label, labelKey, node } = props
+
+  let previousLabelValue = label
 
   const initialState = {
     labelName: { [labelKey]: label },
@@ -21,12 +23,15 @@ export const DisplayLabel = props => {
   }
   const [labelState, setToInitialState] = useState(initialState)
 
-  useEffect(() => {
-    setToInitialState({
-      labelName: { [labelKey]: label },
-      requested: false
-    })
-  }, [label])
+  useEffect(
+    () => {
+      setToInitialState({
+        labelName: { [labelKey]: label },
+        requested: false
+      })
+    },
+    [label]
+  )
 
   const handleChange = (event, labelKey) => {
     let newState = _.cloneDeep(labelState)
@@ -49,7 +54,6 @@ export const DisplayLabel = props => {
 
   return (
     <React.Fragment>
-      <StyledKeyEditor>{labelKey}:</StyledKeyEditor>
       <StyledValue data-testid='user-details-username'>
         <EditPropertiesInput
           type='text'
@@ -62,6 +66,17 @@ export const DisplayLabel = props => {
           <PartialConfirmationButtons
             icon={<TickMarkIcon />}
             onCanceled={onCanceled}
+            onConfirmed={() => {
+              props.editEntityAction(
+                {
+                  previousLabelValue: previousLabelValue,
+                  labelName: labelState.labelName[labelKey],
+                  nodeId: node.identity.toInt()
+                },
+                'update',
+                'node'
+              )
+            }}
           />
         ) : null}
         <ConfirmationButton
@@ -76,5 +91,6 @@ export const DisplayLabel = props => {
 
 DisplayLabel.propTypes = {
   labelKey: PropTypes.string,
-  label: PropTypes.string
+  label: PropTypes.string,
+  editEntityAction: PropTypes.func
 }

@@ -11,14 +11,15 @@ import {
   ExpandMenuIcon,
   CollapseMenuIcon
 } from 'browser-components/icons/Icons'
-import { FoldersButton } from '../Sidebar/styled'
 import {
+  FoldersButton,
   StyledList,
   StyledListHeaderItem,
   StyledFavFolderButtonSpan,
   FolderButtonContainer,
   StyledFolderLabel
 } from '../Sidebar/styled'
+
 import classNames from 'classnames'
 import styles from '../DatabaseInfo/style_meta.css'
 import DisplayRelationshipType from './DisplayRelationshipType'

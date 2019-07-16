@@ -9,13 +9,15 @@ import * as _ from 'lodash'
 import classNames from 'classnames'
 import styles from '../DatabaseInfo/style_meta.css'
 import { StyledTable, StyledValue } from '../DatabaseInfo/styled'
-import { BinIcon } from 'browser-components/icons/Icons'
+import { BinIcon, PlusIcon, CancelIcon } from 'browser-components/icons/Icons'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 import { DisplayProperties } from '../EditorInfo/DisplayProperties'
 import { ExpandRelationshipDetails } from './ExpandRelationshipDetails'
-import { EditPropertiesInput } from './styled'
+import { EditPropertiesInput, RelationshipIconButton } from './styled'
 import { DisplayLabel } from './DisplayLabel'
 import AddProperty from './AddProperty'
+
+import { CreateRelationship } from './CreateRelationship'
 /**
  * Creates items to display in chip format
  * @param {*} originalList Item list
@@ -60,7 +62,11 @@ const LabelSection = props => {
                   <StyledTable>
                     <tbody>
                       <tr>
-                        <DisplayLabel label={label} labelKey={labelKey} />
+                        <DisplayLabel
+                          {...props}
+                          label={label}
+                          labelKey={labelKey}
+                        />
                       </tr>
                     </tbody>
                   </StyledTable>
@@ -126,12 +132,15 @@ export const PropertiesSection = props => {
    * @param updatePropertiesState — Function that returns an updated state everytime props change
    * @param deps —  Will activate when the props change
    */
-  useEffect(() => {
-    updatePropertiesState({
-      ...propertiesState,
-      properties: { ...props.properties }
-    })
-  }, [props.properties])
+  useEffect(
+    () => {
+      updatePropertiesState({
+        ...propertiesState,
+        properties: { ...props.properties }
+      })
+    },
+    [props.properties]
+  )
 
   let content = []
   if (propertiesState.properties) {
@@ -253,10 +262,30 @@ export const RelationshipSection = props => {
   if (!props.toSelectedNode.length && !props.fromSelectedNode.length) {
     noRelationshipMessage = <p>{`There are no relationships for this node`}</p>
   }
-
+  const [relationshipRequest, setRelationshipRequest] = useState(false)
   return (
     <DrawerSection>
-      <DrawerSubHeader>Relationships</DrawerSubHeader>
+      <DrawerSubHeader>
+        Relationships
+        {relationshipRequest ? (
+          <React.Fragment>
+            <RelationshipIconButton
+              onClick={() => setRelationshipRequest(!relationshipRequest)}
+            >
+              <CancelIcon />
+            </RelationshipIconButton>
+            <CreateRelationship />
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <RelationshipIconButton
+              onClick={() => setRelationshipRequest(!relationshipRequest)}
+            >
+              <PlusIcon />
+            </RelationshipIconButton>
+          </React.Fragment>
+        )}
+      </DrawerSubHeader>
       {showRelationshipDetails(
         props.fromSelectedNode,
         props.entityType,
