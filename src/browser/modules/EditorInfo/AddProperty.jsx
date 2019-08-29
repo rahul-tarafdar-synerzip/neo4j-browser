@@ -20,6 +20,8 @@ import { v1 as neo4j } from 'neo4j-driver'
 import { Calendar } from 'styled-icons/boxicons-regular/Calendar'
 import DayPicker from 'react-day-picker'
 import 'react-day-picker/lib/style.css'
+import Input from '@material-ui/core/Input'
+import MaskedInput from 'react-text-mask'
 
 const IconButton = styled.button`
   margin-left: 4px;
@@ -61,9 +63,30 @@ function DropDownContents (props) {
         <MenuItem value='date'>Date</MenuItem>
         <MenuItem value='cartesian2D'>Cartesian-2D</MenuItem>
         <MenuItem value='cartesian3D'>Cartesian-3D</MenuItem>
+        <MenuItem value='geographic2D'>Geographic-2D</MenuItem>
+        <MenuItem value='geographic3D'>Geographic-3D</MenuItem>
       </Select>
     </FormControl>
   )
+}
+
+function TextMaskCustom (props) {
+  const { inputRef, ...other } = props
+
+  return (
+    <MaskedInput
+      {...other}
+      ref={ref => {
+        inputRef(ref ? ref.inputElement : null)
+      }}
+      mask={[/[1-9]/, /\d/, '.', /\d/, /\d/]}
+      showMask
+    />
+  )
+}
+
+TextMaskCustom.propTypes = {
+  inputRef: PropTypes.func.isRequired
 }
 
 function AddProperty (props) {
@@ -75,7 +98,7 @@ function AddProperty (props) {
   }
   const [myState, updatePropertiesState] = useState(initialState)
 
-  const handleCartesian = (axis, value) => {
+  const handleCartesian = (axis, value, srid) => {
     let newState = _.cloneDeep(myState)
     let point = newState.newProperties.propValue
     let p = { x: 0, y: 0, z: undefined }
@@ -85,7 +108,6 @@ function AddProperty (props) {
       p.z = point.z
     }
     p[axis] = value || 0
-    const srid = newState.newProperties.datatype === 'cartesian2D' ? 7203 : 9157
     point = new neo4j.types.Point(srid, p.x, p.y, p.z)
 
     updatePropertiesState({
@@ -177,7 +199,7 @@ function AddProperty (props) {
             id='x'
             type='number'
             onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value))
+              handleCartesian(e.target.id, parseFloat(e.target.value), 7203)
             }}
             style={{ width: '120px' }}
           />
@@ -186,7 +208,7 @@ function AddProperty (props) {
             id='y'
             type='number'
             onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value))
+              handleCartesian(e.target.id, parseFloat(e.target.value), 7203)
             }}
             style={{ width: '120px' }}
           />
@@ -201,7 +223,7 @@ function AddProperty (props) {
             id='x'
             type='number'
             onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value))
+              handleCartesian(e.target.id, parseFloat(e.target.value), 9157)
             }}
             style={{ width: '120px' }}
           />
@@ -210,7 +232,7 @@ function AddProperty (props) {
             id='y'
             type='number'
             onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value))
+              handleCartesian(e.target.id, parseFloat(e.target.value), 9157)
             }}
             style={{ width: '120px' }}
           />
@@ -219,9 +241,96 @@ function AddProperty (props) {
             id='z'
             type='number'
             onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value))
+              handleCartesian(e.target.id, parseFloat(e.target.value), 9157)
             }}
             style={{ width: '120px' }}
+          />
+        </React.Fragment>
+      )
+      break
+    case 'geographic2D':
+      valueInput = (
+        <React.Fragment>
+          Longitude/X :
+          <Input
+            style={{
+              width: '120px',
+              color: '#555',
+              backgroundColor: '#fff',
+              padding: '4px 12px',
+              fontSize: '12px'
+            }}
+            onChange={e => {
+              handleCartesian(e.target.id, parseFloat(e.target.value), 4326)
+            }}
+            id='x'
+            inputComponent={TextMaskCustom}
+          />
+          Latitude/Y :
+          <Input
+            style={{
+              width: '120px',
+              color: '#555',
+              backgroundColor: '#fff',
+              padding: '4px 12px',
+              fontSize: '12px'
+            }}
+            onChange={e => {
+              handleCartesian(e.target.id, parseFloat(e.target.value), 4326)
+            }}
+            id='y'
+            inputComponent={TextMaskCustom}
+          />
+        </React.Fragment>
+      )
+      break
+    case 'geographic3D':
+      valueInput = (
+        <React.Fragment>
+          Longitude/X :
+          <Input
+            style={{
+              width: '120px',
+              color: '#555',
+              backgroundColor: '#fff',
+              padding: '4px 12px',
+              fontSize: '12px'
+            }}
+            onChange={e => {
+              handleCartesian(e.target.id, parseFloat(e.target.value), 4979)
+            }}
+            id='x'
+            inputComponent={TextMaskCustom}
+          />
+          Latitude/Y :
+          <Input
+            style={{
+              width: '120px',
+              color: '#555',
+              backgroundColor: '#fff',
+              padding: '4px 12px',
+              fontSize: '12px'
+            }}
+            onChange={e => {
+              handleCartesian(e.target.id, parseFloat(e.target.value), 4979)
+            }}
+            id='y'
+            inputComponent={TextMaskCustom}
+          />
+          Height/Z :
+          <Input
+            style={{
+              width: '120px',
+              color: '#555',
+              backgroundColor: '#fff',
+              padding: '4px 12px',
+              fontSize: '12px'
+            }}
+            onChange={e => {
+              handleCartesian(e.target.id, parseFloat(e.target.value), 4979)
+            }}
+            id='z'
+            inputComponent={TextMaskCustom}
           />
         </React.Fragment>
       )

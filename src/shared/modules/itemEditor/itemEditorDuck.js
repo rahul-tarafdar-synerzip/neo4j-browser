@@ -138,6 +138,18 @@ function getCypherCompatibleValue (action) {
         action.editPayload.value.y
       }, z: ${action.editPayload.value.z}, crs: 'cartesian-3D' })`
       break
+    case 'geographic2D':
+      convertedValue = `point({ longitude: ${
+        action.editPayload.value.x
+      }, latitude: ${action.editPayload.value.y}, crs: 'wgs-84' })`
+      break
+    case 'geographic3D':
+      convertedValue = `point({ longitude: ${
+        action.editPayload.value.x
+      }, latitude: ${action.editPayload.value.y}, height: ${
+        action.editPayload.value.z
+      }, crs: 'wgs-84-3d' })`
+      break
     default:
       convertedValue = `'${action.editPayload.value}'`
       break
