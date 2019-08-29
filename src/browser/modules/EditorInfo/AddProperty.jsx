@@ -20,8 +20,7 @@ import { v1 as neo4j } from 'neo4j-driver'
 import { Calendar } from 'styled-icons/boxicons-regular/Calendar'
 import DayPicker from 'react-day-picker'
 import 'react-day-picker/lib/style.css'
-import Input from '@material-ui/core/Input'
-import MaskedInput from 'react-text-mask'
+import AddSpatialProperty from './AddSpatialProperty'
 
 const IconButton = styled.button`
   margin-left: 4px;
@@ -61,32 +60,10 @@ function DropDownContents (props) {
         <MenuItem value='number'>Number</MenuItem>
         <MenuItem value='boolean'>Boolean</MenuItem>
         <MenuItem value='date'>Date</MenuItem>
-        <MenuItem value='cartesian2D'>Cartesian-2D</MenuItem>
-        <MenuItem value='cartesian3D'>Cartesian-3D</MenuItem>
-        <MenuItem value='geographic2D'>Geographic-2D</MenuItem>
-        <MenuItem value='geographic3D'>Geographic-3D</MenuItem>
+        <MenuItem value='spatial'>Spatial</MenuItem>
       </Select>
     </FormControl>
   )
-}
-
-function TextMaskCustom (props) {
-  const { inputRef, ...other } = props
-
-  return (
-    <MaskedInput
-      {...other}
-      ref={ref => {
-        inputRef(ref ? ref.inputElement : null)
-      }}
-      mask={[/[1-9]/, /\d/, '.', /\d/, /\d/]}
-      showMask
-    />
-  )
-}
-
-TextMaskCustom.propTypes = {
-  inputRef: PropTypes.func.isRequired
 }
 
 function AddProperty (props) {
@@ -191,149 +168,8 @@ function AddProperty (props) {
         </React.Fragment>
       )
       break
-    case 'cartesian2D':
-      valueInput = (
-        <React.Fragment>
-          X:
-          <TextInput
-            id='x'
-            type='number'
-            onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value), 7203)
-            }}
-            style={{ width: '120px' }}
-          />
-          Y:
-          <TextInput
-            id='y'
-            type='number'
-            onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value), 7203)
-            }}
-            style={{ width: '120px' }}
-          />
-        </React.Fragment>
-      )
-      break
-    case 'cartesian3D':
-      valueInput = (
-        <React.Fragment>
-          X:
-          <TextInput
-            id='x'
-            type='number'
-            onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value), 9157)
-            }}
-            style={{ width: '120px' }}
-          />
-          Y:
-          <TextInput
-            id='y'
-            type='number'
-            onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value), 9157)
-            }}
-            style={{ width: '120px' }}
-          />
-          Z:
-          <TextInput
-            id='z'
-            type='number'
-            onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value), 9157)
-            }}
-            style={{ width: '120px' }}
-          />
-        </React.Fragment>
-      )
-      break
-    case 'geographic2D':
-      valueInput = (
-        <React.Fragment>
-          Longitude/X :
-          <Input
-            style={{
-              width: '120px',
-              color: '#555',
-              backgroundColor: '#fff',
-              padding: '4px 12px',
-              fontSize: '12px'
-            }}
-            onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value), 4326)
-            }}
-            id='x'
-            inputComponent={TextMaskCustom}
-          />
-          Latitude/Y :
-          <Input
-            style={{
-              width: '120px',
-              color: '#555',
-              backgroundColor: '#fff',
-              padding: '4px 12px',
-              fontSize: '12px'
-            }}
-            onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value), 4326)
-            }}
-            id='y'
-            inputComponent={TextMaskCustom}
-          />
-        </React.Fragment>
-      )
-      break
-    case 'geographic3D':
-      valueInput = (
-        <React.Fragment>
-          Longitude/X :
-          <Input
-            style={{
-              width: '120px',
-              color: '#555',
-              backgroundColor: '#fff',
-              padding: '4px 12px',
-              fontSize: '12px'
-            }}
-            onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value), 4979)
-            }}
-            id='x'
-            inputComponent={TextMaskCustom}
-          />
-          Latitude/Y :
-          <Input
-            style={{
-              width: '120px',
-              color: '#555',
-              backgroundColor: '#fff',
-              padding: '4px 12px',
-              fontSize: '12px'
-            }}
-            onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value), 4979)
-            }}
-            id='y'
-            inputComponent={TextMaskCustom}
-          />
-          Height/Z :
-          <Input
-            style={{
-              width: '120px',
-              color: '#555',
-              backgroundColor: '#fff',
-              padding: '4px 12px',
-              fontSize: '12px'
-            }}
-            onChange={e => {
-              handleCartesian(e.target.id, parseFloat(e.target.value), 4979)
-            }}
-            id='z'
-            inputComponent={TextMaskCustom}
-          />
-        </React.Fragment>
-      )
+    case 'spatial':
+      valueInput = <AddSpatialProperty handleCartesian={handleCartesian} />
       break
   }
 
