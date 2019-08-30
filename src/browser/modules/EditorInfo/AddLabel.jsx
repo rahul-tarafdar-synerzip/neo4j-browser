@@ -8,10 +8,6 @@ import {
   CancelIcon
 } from 'browser-components/icons/Icons'
 import styled from 'styled-components'
-import {
-  DrawerSection,
-  DrawerSectionBody
-} from 'browser-components/drawer/index'
 import { TextInput } from 'browser-components/Form'
 import { StyledFavFolderButtonSpan } from '../Sidebar/styled'
 
@@ -37,43 +33,39 @@ function AddLabel (props) {
         </IconButton>
       </StyledFavFolderButtonSpan>
       {textField ? (
-        <DrawerSection>
-          <DrawerSectionBody>
-            <StyledTable>
-              <StyledKey>Label:</StyledKey>
-              <StyledValue>
-                <TextInput
-                  id='label'
-                  style={{
-                    width: '120px'
-                  }}
-                  onChange={() => {
-                    handleChange(([event.target.id] = event.target.value))
-                  }}
-                />
-              </StyledValue>
-              <PartialConfirmationButtons
-                cancelIcon={
-                  <IconButton onClick={() => handleToggle(textField)}>
-                    <CancelIcon />
-                  </IconButton>
-                }
-                onCanceled={() => {
-                  handleToggle(false)
-                }}
-                confirmIcon={<TickMarkIcon />}
-                onConfirmed={() => {
-                  handleToggle(!textField)
-                  props.editEntityAction(
-                    { label: label, nodeId: nodeId },
-                    'create',
-                    'nodeLabel'
-                  )
-                }}
-              />
-            </StyledTable>
-          </DrawerSectionBody>
-        </DrawerSection>
+        <StyledTable>
+          <StyledKey>Label:</StyledKey>
+          <StyledValue>
+            <TextInput
+              id='label'
+              style={{
+                width: '120px'
+              }}
+              onChange={() => {
+                handleChange(([event.target.id] = event.target.value))
+              }}
+            />
+          </StyledValue>
+          <PartialConfirmationButtons
+            cancelIcon={
+              <IconButton onClick={() => handleToggle(textField)}>
+                <CancelIcon />
+              </IconButton>
+            }
+            onCanceled={() => {
+              handleToggle(false)
+            }}
+            confirmIcon={<TickMarkIcon />}
+            onConfirmed={() => {
+              handleToggle(!textField)
+              props.editEntityAction(
+                { label: label, nodeId: nodeId },
+                'create',
+                'nodeLabel'
+              )
+            }}
+          />
+        </StyledTable>
       ) : null}
     </React.Fragment>
   )
