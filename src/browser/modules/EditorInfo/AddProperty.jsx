@@ -20,7 +20,7 @@ import { v1 as neo4j } from 'neo4j-driver'
 import { Calendar } from 'styled-icons/boxicons-regular/Calendar'
 import DayPicker from 'react-day-picker'
 import 'react-day-picker/lib/style.css'
-import AddSpatialProperty from './AddSpatialProperty'
+import { SpatialProperty } from './SpatialProperty'
 
 const IconButton = styled.button`
   margin-left: 4px;
@@ -74,27 +74,6 @@ function AddProperty (props) {
     newProperties: {}
   }
   const [myState, updatePropertiesState] = useState(initialState)
-
-  const handleCartesian = (axis, value, srid) => {
-    let newState = _.cloneDeep(myState)
-    let point = newState.newProperties.propValue
-    let p = { x: 0, y: 0, z: undefined }
-    if (point && neo4j.isPoint(point)) {
-      p.x = point.x
-      p.y = point.y
-      p.z = point.z
-    }
-    p[axis] = value || 0
-    point = new neo4j.types.Point(srid, p.x, p.y, p.z)
-
-    updatePropertiesState({
-      ...newState,
-      newProperties: {
-        ...newState.newProperties,
-        propValue: point
-      }
-    })
-  }
 
   const handleChange = (key1, value) => {
     let newState = _.cloneDeep(myState)
@@ -169,7 +148,15 @@ function AddProperty (props) {
       )
       break
     case 'spatial':
-      valueInput = <AddSpatialProperty handleCartesian={handleCartesian} />
+      valueInput = (
+        <SpatialProperty
+          onChange={pointProperty => {
+            const { coordinateSystem, x, y, z } = pointProperty
+            const point = new neo4j.types.Point(coordinateSystem, x, y, z)
+            handleChange('propValue', point)
+          }}
+        />
+      )
       break
   }
 
