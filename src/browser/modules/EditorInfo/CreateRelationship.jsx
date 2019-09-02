@@ -1,11 +1,10 @@
-import React, { Component, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   DrawerSection,
   DrawerSectionBody
 } from 'browser-components/drawer/index'
 import { StyledTable, StyledKey, StyledValue } from '../DatabaseInfo/styled'
-import { CreateRelationshipSelectInput } from './styled'
 import CreatableSelect from 'react-select/creatable'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
 import {
@@ -31,15 +30,13 @@ const IconButton = styled.button`
  * Component to Create New Relationship
  */
 export default function CreateRelationship (props) {
-  const [direction, setDirection] = useState(null)
+  const [direction, setDirection] = useState('')
   const [selectedType, setSelectedType] = useState(null)
   const [selectedLabel, setSelectedLabel] = useState(null)
   const [selectedNode, setSelectedNode] = useState(null)
 
-  console.log('props received - ', props)
   useEffect(
     () => {
-      console.log('props inside useEffect - ', props)
       props.fetchSelectOptions('relationship', 'relationshipType')
       props.fetchSelectOptions('relationship', 'label')
       selectedLabel ? props.fetchSelectOptions('Node', selectedLabel.value) : ''
