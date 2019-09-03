@@ -24,6 +24,7 @@ import AddProperty from './AddProperty'
 import AddLabel from './AddLabel'
 import CreateRelationship from './CreateRelationship'
 import styled from 'styled-components'
+import { StyledFavFolderButtonSpan } from '../Sidebar/styled'
 const IconButton = styled.button`
   margin-left: 4px;
   border: 0;
@@ -303,42 +304,44 @@ export const RelationshipSection = props => {
       <DrawerSubHeader>
         Relationships
         <React.Fragment>
-          <ConfirmationButton
-            requestIcon={
-              <IconButton
-                onClick={() => {
-                  setRelationshipRequest(!relationshipRequest)
-                }}
-              >
-                <PlusIcon />
-              </IconButton>
-            }
-            cancelIcon={
-              <IconButton
-                onClick={() => {
-                  setRelationshipRequest(relationshipRequest)
-                }}
-              >
-                <CancelIcon />
-              </IconButton>
-            }
-            confirmIcon={<TickMarkIcon />}
-            onConfirmed={() => {
-              setRelationshipRequest(!relationshipRequest)
-              props.editEntityAction(
-                {
-                  direction: direction,
-                  startNodeId: props.node.identity.toInt(),
-                  startNodeLabel: props.node.labels[0],
-                  endNodeId: selectedNode.value.identity.toInt(),
-                  endNodeLabel: selectedNode.value.labels[0],
-                  relationshipType: selectedType.value
-                },
-                'create',
-                'relationship'
-              )
-            }}
-          />
+          <StyledFavFolderButtonSpan>
+            <ConfirmationButton
+              requestIcon={
+                <IconButton
+                  onClick={() => {
+                    setRelationshipRequest(!relationshipRequest)
+                  }}
+                >
+                  <PlusIcon />
+                </IconButton>
+              }
+              cancelIcon={
+                <IconButton
+                  onClick={() => {
+                    setRelationshipRequest(relationshipRequest)
+                  }}
+                >
+                  <CancelIcon />
+                </IconButton>
+              }
+              confirmIcon={<TickMarkIcon />}
+              onConfirmed={() => {
+                setRelationshipRequest(!relationshipRequest)
+                props.editEntityAction(
+                  {
+                    direction: direction,
+                    startNodeId: props.node.identity.toInt(),
+                    startNodeLabel: props.node.labels[0],
+                    endNodeId: selectedNode.value.identity.toInt(),
+                    endNodeLabel: selectedNode.value.labels[0],
+                    relationshipType: selectedType.value
+                  },
+                  'create',
+                  'relationship'
+                )
+              }}
+            />
+          </StyledFavFolderButtonSpan>
           {relationshipRequest ? (
             <CreateRelationship
               fetchSelectOptions={props.fetchSelectOptions}
