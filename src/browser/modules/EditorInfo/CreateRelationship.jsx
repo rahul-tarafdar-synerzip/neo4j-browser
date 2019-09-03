@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import {
   DrawerSection,
@@ -6,43 +6,15 @@ import {
 } from 'browser-components/drawer/index'
 import { StyledTable, StyledKey, StyledValue } from '../DatabaseInfo/styled'
 import CreatableSelect from 'react-select/creatable'
-import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
-import {
-  PlusIcon,
-  CancelIcon,
-  TickMarkIcon
-} from 'browser-components/icons/Icons'
-import styled from 'styled-components'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-
-const IconButton = styled.button`
-  margin-left: 4px;
-  border: 0;
-  background: transparent;
-  &:focus {
-    outline: none;
-  }
-`
 
 /**
  * Component to Create New Relationship
  */
 export default function CreateRelationship (props) {
-  const [direction, setDirection] = useState('')
-  const [selectedType, setSelectedType] = useState(null)
-  const [selectedLabel, setSelectedLabel] = useState(null)
-  const [selectedNode, setSelectedNode] = useState(null)
-
-  useEffect(
-    () => {
-      props.fetchSelectOptions('relationship', 'relationshipType')
-      props.fetchSelectOptions('relationship', 'label')
-      selectedLabel ? props.fetchSelectOptions('Node', selectedLabel.value) : ''
-    },
-    [selectedLabel]
-  )
+  const { direction, selectedType, selectedLabel, selectedNode } = props
   return (
     <React.Fragment>
       <DrawerSection>
@@ -73,7 +45,7 @@ export default function CreateRelationship (props) {
                       }}
                       value={direction}
                       onChange={e => {
-                        setDirection(e.target.value)
+                        props.setDirection(e.target.value)
                       }}
                     >
                       <MenuItem value='<----'>{'<---- (Incoming)'}</MenuItem>
@@ -92,7 +64,7 @@ export default function CreateRelationship (props) {
                     isClearable
                     value={selectedType}
                     onChange={selectedType => {
-                      setSelectedType(selectedType)
+                      props.setSelectedType(selectedType)
                     }}
                     options={props.relationshipTypeList}
                   />
@@ -108,7 +80,7 @@ export default function CreateRelationship (props) {
                     isClearable
                     value={selectedLabel}
                     onChange={selectedLabel => {
-                      setSelectedLabel(selectedLabel)
+                      props.setSelectedLabel(selectedLabel)
                     }}
                     options={props.labelList}
                   />
@@ -124,7 +96,7 @@ export default function CreateRelationship (props) {
                     isClearable
                     value={selectedNode}
                     onChange={selectedNode => {
-                      setSelectedNode(selectedNode)
+                      props.setSelectedNode(selectedNode)
                     }}
                     options={props.nodeList}
                   />
@@ -132,33 +104,6 @@ export default function CreateRelationship (props) {
               </tr>
             </tbody>
           </StyledTable>
-          <ConfirmationButton
-            requestIcon={
-              <IconButton>
-                <PlusIcon />
-              </IconButton>
-            }
-            cancelIcon={
-              <IconButton onClick={() => {}}>
-                <CancelIcon />
-              </IconButton>
-            }
-            confirmIcon={<TickMarkIcon />}
-            onConfirmed={() => {
-              props.editEntityAction(
-                {
-                  direction: direction,
-                  startNodeId: props.node.identity.toInt(),
-                  startNodeLabel: props.node.labels[0],
-                  endNodeId: selectedNode.value.identity.toInt(),
-                  endNodeLabel: selectedNode.value.labels[0],
-                  relationshipType: selectedType.value
-                },
-                'create',
-                'relationship'
-              )
-            }}
-          />
         </DrawerSectionBody>
       </DrawerSection>
     </React.Fragment>
