@@ -6,8 +6,9 @@ import {
 } from 'browser-components/drawer/index'
 import { StyledTable, StyledKey, StyledValue } from '../DatabaseInfo/styled'
 import CreatableSelect from 'react-select/creatable'
+import Select from 'react-select'
 import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
+import { Select as MaterialUISelect } from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem'
 
 /**
@@ -32,7 +33,7 @@ export default function CreateRelationship (props) {
                     }}
                     variant='outlined'
                   >
-                    <Select
+                    <MaterialUISelect
                       name='datatype'
                       style={{
                         background: '#fff',
@@ -50,7 +51,7 @@ export default function CreateRelationship (props) {
                     >
                       <MenuItem value='<----'>{'<---- (Incoming)'}</MenuItem>
                       <MenuItem value='---->'>{'----> (Outgoing)'}</MenuItem>
-                    </Select>
+                    </MaterialUISelect>
                   </FormControl>
                 </StyledValue>
               </tr>
@@ -76,7 +77,7 @@ export default function CreateRelationship (props) {
                   style={{ width: '100%' }}
                   data-testid='user-details-username'
                 >
-                  <CreatableSelect
+                  <Select
                     isClearable
                     value={selectedLabel}
                     onChange={selectedLabel => {
@@ -92,7 +93,7 @@ export default function CreateRelationship (props) {
                   style={{ width: '100%' }}
                   data-testid='user-details-username'
                 >
-                  <CreatableSelect
+                  <Select
                     isClearable
                     value={selectedNode}
                     onChange={selectedNode => {
