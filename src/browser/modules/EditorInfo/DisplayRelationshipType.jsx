@@ -46,6 +46,7 @@ function DisplayRelationshipType (props) {
     <div>
       <CreatableSelect
         isClearable
+        defaultInputValue={selectedType}
         value={selectedType}
         onChange={selectedType => {
           setSelectedType(selectedType)
