@@ -31,7 +31,7 @@ const IconButton = styled.button`
     outline: none;
   }
 `
-function DropDownContents (props) {
+export function DropDownContents (props) {
   return (
     <FormControl
       style={{
@@ -52,7 +52,11 @@ function DropDownContents (props) {
           borderTop: '1px solid #ccc',
           borderRadius: '4px'
         }}
-        value={props.myState.newProperties.datatype}
+        value={
+          props.dataTypeValue
+            ? props.dataTypeValue
+            : props.myState.newProperties.datatype
+        }
         onChange={e => {
           props.handleChange(e.target.name, e.target.value)
         }}
@@ -65,6 +69,24 @@ function DropDownContents (props) {
       </Select>
     </FormControl>
   )
+}
+
+const dataTypeChecker = value => {
+  if (neo4j.isInt(value[0])) {
+    return 'number'
+  }
+  if (neo4j.isPoint(value[0])) {
+    return 'spatial'
+  }
+  if (neo4j.isDate(value[0])) {
+    return 'date'
+  }
+  if (typeof value[0] === 'string') {
+    return 'string'
+  }
+  if (typeof value[0] === 'boolean') {
+    return 'boolean'
+  }
 }
 
 function AddProperty (props) {
@@ -89,13 +111,20 @@ function AddProperty (props) {
 
   let valueInput = null
   const options = ['true', 'false']
-  switch (myState.newProperties.datatype) {
+  let dataTypeValue = props.properties
+    ? dataTypeChecker(Object.values(props.properties))
+    : null
+  switch (
+    props.dataTypeValue ? props.dataTypeValue : myState.newProperties.datatype
+  ) {
     case 'string':
       valueInput = (
         <TextInput
           id='propValue'
+          value={props.properties ? Object.values(props.properties) : null}
           onChange={e => {
             handleChange(e.target.id, e.target.value)
+            console.log('in handle')
           }}
           style={{ width: '120px' }}
         />
@@ -105,6 +134,7 @@ function AddProperty (props) {
       valueInput = (
         <TextInput
           id='propValue'
+          value={props.properties ? Object.values(props.properties) : null}
           type='number'
           onChange={e => {
             handleChange(e.target.id, neo4j.int(e.target.value))
@@ -120,7 +150,11 @@ function AddProperty (props) {
           onChange={e => {
             handleChange('propValue', e.target.value)
           }}
-          selectedValue={myState.newProperties.propValue}
+          selectedValue={
+            props.properties
+              ? Object.values(props.properties)
+              : myState.newProperties.propValue
+          }
         />
       )
       break
@@ -131,7 +165,11 @@ function AddProperty (props) {
             style={{
               width: '120px'
             }}
-            value={myState.newProperties.propValue}
+            value={
+              props.properties
+                ? Object.values(props.properties)
+                : myState.newProperties.propValue
+            }
             disabled
           />
           <Calendar
@@ -163,12 +201,14 @@ function AddProperty (props) {
 
   return (
     <React.Fragment>
-      <StyledFavFolderButtonSpan>
-        <IconButton onClick={() => handleToggle(!textField)}>
-          <PlusIcon />
-        </IconButton>
-      </StyledFavFolderButtonSpan>
-      {textField ? (
+      {props.ToDisplay != 'view' ? (
+        <StyledFavFolderButtonSpan>
+          <IconButton onClick={() => handleToggle(!textField)}>
+            <PlusIcon />
+          </IconButton>
+        </StyledFavFolderButtonSpan>
+      ) : null}
+      {props.ToDisplay == 'view' || textField ? (
         <DrawerSection>
           <DrawerSectionBody>
             <StyledTable>
@@ -177,6 +217,9 @@ function AddProperty (props) {
                 <StyledValue>
                   <TextInput
                     id='key'
+                    value={
+                      props.properties ? Object.keys(props.properties) : null
+                    }
                     onChange={e => {
                       handleChange(e.target.id, e.target.value)
                     }}
@@ -188,6 +231,7 @@ function AddProperty (props) {
                 <StyledKey> Data Type:</StyledKey>
                 <StyledValue>
                   <DropDownContents
+                    dataTypeValue={dataTypeValue}
                     myState={myState}
                     handleChange={handleChange}
                   />
