@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { ConfirmationButton } from 'browser-components/buttons/ConfirmationButton'
-import PartialConfirmationButtons from 'browser-components/buttons/PartialConfirmationButtons'
 import { getStringValue } from './utils'
-import { BinIcon, TickMarkIcon } from 'browser-components/icons/Icons'
-import { StyledValue } from '../DatabaseInfo/styled'
-import { StyledKeyEditor, EditPropertiesInput } from './styled'
+import { BinIcon } from 'browser-components/icons/Icons'
 import PropTypes from 'prop-types'
 import AddProperty from './AddProperty'
 
@@ -55,10 +52,7 @@ export const DisplayProperties = props => {
 
   return (
     <div>
-      <AddProperty
-        ToDisplay='view'
-        properties={propertiesState.properties}
-      />
+      <AddProperty ToDisplay='view' properties={propertiesState.properties} />
 
       <ConfirmationButton
         requestIcon={<BinIcon />}
@@ -81,50 +75,6 @@ export const DisplayProperties = props => {
       />
     </div>
   )
-  // return (
-  //   <div>
-  //     <StyledKeyEditor>{displayPropertiesStateKey}:</StyledKeyEditor>
-  //     <StyledValue data-testid='user-details-username'>
-  //       <EditPropertiesInput
-  //         id='item'
-  //         type='text'
-  //         onChange={e => {
-  //           handleChange(displayPropertiesStateKey, e)
-  //         }}
-  //         value={getStringValue(
-  //           propertiesState.properties[displayPropertiesStateKey]
-  //         )}
-  //       />
-
-  //       {propertiesState.requested ? (
-  //         <PartialConfirmationButtons
-  //           icon={<TickMarkIcon />}
-  //           onCanceled={onCanceled}
-  //         />
-  //       ) : null}
-
-  //       <ConfirmationButton
-  //         requestIcon={<BinIcon />}
-  //         confirmIcon={<BinIcon deleteAction />}
-  //         onConfirmed={() => {
-  //           props.editEntityAction(
-  //             {
-  //               [props.node ? 'nodeId' : 'relationshipId']: props.node
-  //                 ? props.node.identity.toInt()
-  //                 : props.relationship.identity.toInt(),
-  //               [props.node ? 'label' : 'type']: props.node
-  //                 ? props.node.labels[0]
-  //                 : props.relationship.type,
-  //               propertyKey: displayPropertiesStateKey
-  //             },
-  //             'delete',
-  //             props.node ? 'nodeProperty' : 'relationshipProperty'
-  //           )
-  //         }}
-  //       />
-  //     </StyledValue>
-  //   </div>
-  // )
 }
 
 DisplayProperties.propTypes = {

@@ -13,6 +13,7 @@ export const REMOVE_PROPERTY = `${NAME}/REMOVE_PROPERTY`
 export const FETCH_SELECT_OPTIONS_LIST = `${NAME}/FETCH_SELECT_OPTIONS_LIST`
 export const SET_RELATIONSHIPTYPE_LIST = `${NAME}/SET_RELATIONSHIPTYPE_LIST`
 export const SET_LABEL_LIST = `${NAME}/SET_LABEL_LIST`
+export const SET_NODE_LIST = `${NAME}/SET_NODE_LIST`
 
 // Actions
 /**
@@ -72,6 +73,11 @@ export default function reducer (state = initialState, action) {
         ...state,
         labelList: action.labelList
       }
+    case SET_NODE_LIST:
+      return {
+        ...state,
+        nodeList: action.nodeList
+      }
     default:
       return state
   }
@@ -130,9 +136,7 @@ function getCypherCompatibleValue (action) {
       const zValue = action.editPayload.value.z
         ? `z: ${action.editPayload.value.z},`
         : ''
-      convertedValue = `point({ x: ${action.editPayload.value.x}, y: ${
-        action.editPayload.value.y
-      }, ${zValue} srid: ${action.editPayload.value.srid} })`
+      convertedValue = `point({ x: ${action.editPayload.value.x}, y: ${action.editPayload.value.y}, ${zValue} srid: ${action.editPayload.value.srid} })`
       break
     default:
       convertedValue = `'${action.editPayload.value}'`
@@ -163,6 +167,18 @@ export const handleEditEntityEpic = (action$, store) =>
           cmd = `CREATE (a:${action.editPayload.nodeLabel}) RETURN a, ((a)-->()) , ((a)<--())`
         } else if (action.entityType === 'nodeLabel') {
           cmd = `MATCH (a) WHERE id(a)=${action.editPayload.nodeId} SET a:${action.editPayload.label} RETURN a, ((a)-->()) , ((a)<--())`
+        } else if (action.entityType === 'relationship') {
+          if (action.editPayload.direction === '---->') {
+            cmd = `MATCH (a:${action.editPayload.startNodeLabel}),(b:${action.editPayload.endNodeLabel})
+            WHERE ID(a) = ${action.editPayload.startNodeId} AND ID(b) = ${action.editPayload.endNodeId}
+            CREATE (a)-[r:${action.editPayload.relationshipType}]->(b)
+            RETURN  a, ((a)-->()) , ((a)<--())`
+          } else if (action.editPayload.direction === '<----') {
+            cmd = `MATCH (a:${action.editPayload.startNodeLabel}),(b:${action.editPayload.endNodeLabel})
+            WHERE ID(a) = ${action.editPayload.startNodeId} AND ID(b) = ${action.editPayload.endNodeId}
+            CREATE (b)-[r:${action.editPayload.relationshipType}]->(a)
+            RETURN  a, ((a)-->()) , ((a)<--())`
+          }
         }
         break
       case 'update':
@@ -234,6 +250,8 @@ export const handleFetchSelectOptionsEpic = (action$, store) =>
       cmd = `MATCH ()-[r]-() RETURN distinct type(r)`
     } else if (action.serachOperation === 'label') {
       cmd = `MATCH (n) RETURN distinct labels(n)`
+    } else {
+      cmd = `MATCH (n:${action.serachOperation}) RETURN n`
     }
     let newAction = _.cloneDeep(action)
     newAction.cmd = cmd
@@ -259,6 +277,17 @@ export const handleFetchSelectOptionsEpic = (action$, store) =>
             store.dispatch({
               type: SET_LABEL_LIST,
               labelList: optionsList
+            })
+          } else {
+            let optionsList = res.records.map((record, index) => {
+              return {
+                label: Object.values(record._fields[0].properties)[0],
+                value: record._fields[0]
+              }
+            })
+            store.dispatch({
+              type: SET_NODE_LIST,
+              nodeList: optionsList
             })
           }
         }
