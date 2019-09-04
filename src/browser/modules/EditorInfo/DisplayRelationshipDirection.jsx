@@ -11,7 +11,6 @@ import MenuItem from '@material-ui/core/MenuItem'
  */
 
 function DisplayRelationshipDirection (props) {
-  console.log('props received in DisplayRelationshipDirection - ', props)
   useEffect(() => {
     if (props.relationshipEndpoint === 'from') {
       setSelectedDirection('---->')
