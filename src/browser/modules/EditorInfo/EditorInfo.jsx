@@ -11,20 +11,26 @@ import {
 import { getSelectedItem } from 'shared/modules/selectors/itemEditor'
 import AddNode from './AddNode'
 import * as itemEditorActions from 'shared/modules/itemEditor/itemEditorDuck'
-
+import {
+  DISCONNECTED_STATE,
+  PENDING_STATE,
+  CONNECTED_STATE
+} from 'shared/modules/connections/connectionsDuck'
 /**
  * The Editor drawer.
  * Based on selection, either provides node editor or relationship editor.
  * If nothing is selected then it prompts to do so.
  */
 export class EditorInfo extends Component {
-  render () {
+  render (props) {
     return (
       <div>
         <Drawer>
           <DrawerHeader>
             Editor
-            <AddNode editEntityAction={this.props.editEntityAction} />
+            {this.props.neo4jConnectionState === 'connected' ? (
+              <AddNode editEntityAction={this.props.editEntityAction} />
+            ) : null}
           </DrawerHeader>
 
           <DrawerBody>
@@ -56,12 +62,27 @@ export class EditorInfo extends Component {
 }
 
 const mapStateToProps = state => {
+  let connectionState = 'disconnected'
+  if (state.connections) {
+    switch (state.connections.connectionState) {
+      case PENDING_STATE:
+        connectionState = 'pending'
+        break
+      case CONNECTED_STATE:
+        connectionState = 'connected'
+        break
+      case DISCONNECTED_STATE:
+        connectionState = 'disconnected'
+        break
+    }
+  }
   return {
     selectedItem: getSelectedItem(state),
     entityType: state.itemEditor.entityType,
     relationshipTypeList: state.itemEditor.relationshipTypeList,
     labelList: state.itemEditor.labelList,
-    nodeList: state.itemEditor.nodeList
+    nodeList: state.itemEditor.nodeList,
+    neo4jConnectionState: connectionState
   }
 }
 
