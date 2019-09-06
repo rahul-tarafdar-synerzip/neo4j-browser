@@ -11,11 +11,7 @@ import {
 import { getSelectedItem } from 'shared/modules/selectors/itemEditor'
 import AddNode from './AddNode'
 import * as itemEditorActions from 'shared/modules/itemEditor/itemEditorDuck'
-import {
-  DISCONNECTED_STATE,
-  PENDING_STATE,
-  CONNECTED_STATE
-} from 'shared/modules/connections/connectionsDuck'
+import { CONNECTED_STATE } from 'shared/modules/connections/connectionsDuck'
 /**
  * The Editor drawer.
  * Based on selection, either provides node editor or relationship editor.
@@ -28,7 +24,7 @@ export class EditorInfo extends Component {
         <Drawer>
           <DrawerHeader>
             Editor
-            {this.props.neo4jConnectionState === 'connected' ? (
+            {this.props.neo4jConnectionState === CONNECTED_STATE ? (
               <AddNode editEntityAction={this.props.editEntityAction} />
             ) : null}
           </DrawerHeader>
@@ -62,27 +58,13 @@ export class EditorInfo extends Component {
 }
 
 const mapStateToProps = state => {
-  let connectionState = 'disconnected'
-  if (state.connections) {
-    switch (state.connections.connectionState) {
-      case PENDING_STATE:
-        connectionState = 'pending'
-        break
-      case CONNECTED_STATE:
-        connectionState = 'connected'
-        break
-      case DISCONNECTED_STATE:
-        connectionState = 'disconnected'
-        break
-    }
-  }
   return {
     selectedItem: getSelectedItem(state),
     entityType: state.itemEditor.entityType,
     relationshipTypeList: state.itemEditor.relationshipTypeList,
     labelList: state.itemEditor.labelList,
     nodeList: state.itemEditor.nodeList,
-    neo4jConnectionState: connectionState
+    neo4jConnectionState: state.connections.connectionState
   }
 }
 
