@@ -163,7 +163,7 @@ function AddProperty (props) {
           }}
           selectedValue={
             props.properties
-              ? Object.values(props.properties)
+              ? Object.values(props.properties)[0].toString()
               : myState.newProperties.propValue
           }
         />
@@ -200,6 +200,7 @@ function AddProperty (props) {
     case 'spatial':
       valueInput = (
         <SpatialProperty
+          properties={props.properties}
           onChange={pointProperty => {
             const { coordinateSystem, x, y, z } = pointProperty
             const point = new neo4j.types.Point(coordinateSystem, x, y, z)
