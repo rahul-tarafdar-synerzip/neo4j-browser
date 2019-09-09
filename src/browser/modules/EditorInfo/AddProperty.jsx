@@ -133,7 +133,11 @@ function AddProperty (props) {
       valueInput = (
         <TextInput
           id='propValue'
-          value={props.properties ? Object.values(props.properties) : null}
+          value={
+            props.properties
+              ? Object.values(props.properties)
+              : myState.newProperties.propValue
+          }
           onChange={e => {
             handleChange(e.target.id, e.target.value)
           }}
@@ -145,7 +149,11 @@ function AddProperty (props) {
       valueInput = (
         <TextInput
           id='propValue'
-          value={props.properties ? Object.values(props.properties) : null}
+          value={
+            props.properties
+              ? Object.values(props.properties)
+              : myState.newProperties.propValue
+          }
           type='number'
           onChange={e => {
             handleChange(e.target.id, neo4j.int(e.target.value))
@@ -237,16 +245,23 @@ function AddProperty (props) {
             confirmIcon={<TickMarkIcon />}
             onConfirmed={() => {
               handleToggle(!textField)
-              props.editEntityAction(
-                {
-                  id: props.id,
-                  key: myState.newProperties.key,
-                  value: myState.newProperties.propValue,
-                  dataType: myState.newProperties.datatype
-                },
-                'create',
-                'nodeProperty'
-              )
+              if (
+                myState.newProperties.key &&
+                myState.newProperties.propValue
+              ) {
+                props.editEntityAction(
+                  {
+                    id: props.id,
+                    key: myState.newProperties.key,
+                    value: myState.newProperties.propValue,
+                    dataType: myState.newProperties.datatype
+                  },
+                  'create',
+                  'nodeProperty'
+                )
+              } else {
+                alert('Empty field')
+              }
             }}
           />
         </StyledFavFolderButtonSpan>
@@ -261,7 +276,9 @@ function AddProperty (props) {
                   <TextInput
                     id='key'
                     value={
-                      props.properties ? Object.keys(props.properties) : null
+                      props.properties
+                        ? Object.keys(props.properties)
+                        : myState.newProperties.key
                     }
                     onChange={e => {
                       handleChange(e.target.id, e.target.value)
