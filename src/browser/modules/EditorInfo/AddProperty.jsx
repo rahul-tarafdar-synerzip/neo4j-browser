@@ -109,11 +109,12 @@ function AddProperty (props) {
   // effect to show confirmation buttons
   useEffect(() => {
     if (
-      (stateUpdatedWithProps &&
-        props.p &&
-        (props.p.value !== p.value || props.p.key !== p.key)) ||
-      dataTypeChecker(Object.values({ value: props.p && props.p.value })) !==
-        dataType
+      stateUpdatedWithProps &&
+      props.p &&
+      (props.p.value !== p.value ||
+        props.p.key !== p.key ||
+        dataType !==
+          dataTypeChecker(Object.values({ value: props.p && props.p.value })))
     ) {
       setButtonVisibility(true)
     } else {
