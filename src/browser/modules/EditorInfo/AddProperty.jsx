@@ -166,13 +166,12 @@ function AddProperty (props) {
             handleChange('propValue', e.target.value)
           }}
           selectedValue={
-            p.value
+            p
               ? Object.values({
                 value: p.value !== null ? p.value : ''
               })[0].toString()
-              : dataType
+              : ''
           }
-          // selectedValue={dataType ? dataType.toString() : ''}
         />
       )
       break
@@ -316,6 +315,7 @@ function AddProperty (props) {
                     dataTypeValue={dataType}
                     handleChange={(key, value) => {
                       setDatatype(value)
+                      setP({ ...p, value: null })
                     }}
                   />
                 </StyledValue>
