@@ -111,16 +111,13 @@ function AddProperty (props) {
     if (
       stateUpdatedWithProps &&
       props.p &&
-      (props.p.value !== p.value ||
-        props.p.key !== p.key ||
-        dataType !==
-          dataTypeChecker(Object.values({ value: props.p && props.p.value })))
+      (props.p.value !== p.value || props.p.key !== p.key)
     ) {
       setButtonVisibility(true)
     } else {
       setButtonVisibility(false)
     }
-  }, [p && p.key, p && p.value, dataType, stateUpdatedWithProps])
+  }, [p && p.key, p && p.value, stateUpdatedWithProps])
 
   const handleChange = (key1, value) => {
     setP({ ...p, value: value })
@@ -312,6 +309,7 @@ function AddProperty (props) {
                     dataTypeValue={dataType}
                     handleChange={(key, value) => {
                       setDatatype(value)
+                      setP({ ...p, value: null })
                     }}
                   />
                 </StyledValue>
