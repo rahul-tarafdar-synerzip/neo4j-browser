@@ -137,7 +137,7 @@ function AddProperty (props) {
       valueInput = (
         <TextInput
           id='propValue'
-          value={p.value}
+          value={p.value || ''}
           onChange={e => {
             handleChange(e.target.id, e.target.value)
           }}
@@ -343,8 +343,10 @@ function AddProperty (props) {
                   <DropDownContents
                     dataTypeValue={dataType}
                     handleChange={(key, value) => {
-                      setDatatype(value)
-                      setP({ ...p, value: null })
+                      if (dataType !== value) {
+                        setDatatype(value)
+                        setP({ ...p, value: null })
+                      }
                     }}
                   />
                 </StyledValue>
