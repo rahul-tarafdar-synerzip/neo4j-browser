@@ -213,7 +213,13 @@ function AddProperty (props) {
   }
 
   const onConfirmed = () => {
-    if (p && p.key && p.value) {
+    let filledFlag = true
+    if (typeof p.value === 'object') {
+      if (Object.values(p.value).includes(null || NaN)) {
+        filledFlag = false
+      }
+    }
+    if (p && p.key && p.value && filledFlag) {
       if (entityType === 'node') {
         props.editEntityAction(
           {
@@ -281,8 +287,14 @@ function AddProperty (props) {
             }
             confirmIcon={<TickMarkIcon />}
             onConfirmed={() => {
+              let filledFlag = true
+              if (typeof p.value === 'object') {
+                if (Object.values(p.value).includes(null || NaN)) {
+                  filledFlag = false
+                }
+              }
               handleToggle(!textField)
-              if (p && p.key && p.value) {
+              if (p && p.key && p.value && filledFlag) {
                 if (entityType === 'node') {
                   props.editEntityAction(
                     {
