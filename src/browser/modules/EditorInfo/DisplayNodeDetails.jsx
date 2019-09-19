@@ -67,8 +67,8 @@ const LabelSection = props => {
         style={{
           backgroundColor: '#d2d5da',
           padding: '5px',
-          borderRadius: '5px',
-          margin: '2px'
+          borderRadius: '5px'
+          // margin: '2px'
         }}
       >
         <DrawerSubHeader
@@ -86,26 +86,26 @@ const LabelSection = props => {
           />
         </DrawerSubHeader>
         <DrawerSectionBody
-          style={{ marginLeft: '8px' }}
+          style={{ marginLeft: 8, marginRight: 8 }}
           className={classNames({
             [styles['wrapper']]: true
           })}
         >
           {labels.map((label, labelKey) => {
             return (
-              <div key={labelKey}>
-                <StyledTable>
-                  <tbody>
-                    <tr>
-                      <DisplayLabel
-                        isDeletable={labels.length > 1}
-                        {...props}
-                        label={label}
-                        labelKey={labelKey}
-                      />
-                    </tr>
-                  </tbody>
-                </StyledTable>
+              <div key={labelKey} style={{ width: '100%' }}>
+                {/* <StyledTable> */}
+                {/* <tbody> */}
+                {/* <tr> */}
+                <DisplayLabel
+                  isDeletable={labels.length > 1}
+                  {...props}
+                  label={label}
+                  labelKey={labelKey}
+                />
+                {/* </tr> */}
+                {/* </tbody> */}
+                {/* </StyledTable> */}
               </div>
             )
           })}
