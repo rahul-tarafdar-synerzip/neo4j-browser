@@ -23,6 +23,13 @@ function DisplayRelationshipDirection (props) {
   const [selectedDirection, setSelectedDirection] = useState(selectedDirection)
   const [showButtons, setButtonVisibility] = useState(false)
 
+  const propsToStateMap = value => {
+    if (value === 'to') {
+      return '<----'
+    } else {
+      return '---->'
+    }
+  }
   const onConfirmed = () => {
     props.editEntityAction(
       {
@@ -68,8 +75,16 @@ function DisplayRelationshipDirection (props) {
             }}
             value={selectedDirection}
             onChange={e => {
-              setSelectedDirection(e.target.value)
-              setButtonVisibility(true)
+              if (
+                e &&
+                e.target.value !== propsToStateMap(props.relationshipEndpoint)
+              ) {
+                setSelectedDirection(e.target.value)
+                setButtonVisibility(true)
+              } else {
+                setSelectedDirection(e.target.value)
+                setButtonVisibility(false)
+              }
             }}
           >
             <MenuItem value='<----'>{'<---- (Incoming)'}</MenuItem>
