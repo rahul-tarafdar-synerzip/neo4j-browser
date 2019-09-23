@@ -17,10 +17,13 @@ import { IconContainer } from 'browser-components/icons/IconContainer'
 const black = `
   color: #000000;
 `
+const white = `
+  color: #ffffff;
+`
 export const CollapseMenuIconBlack = () => (
   <IconContainer
-    activeStyle={black}
-    inactiveStyle={black}
+    activeStyle={white}
+    inactiveStyle={white}
     className='fa fa-caret-down'
   />
 )
